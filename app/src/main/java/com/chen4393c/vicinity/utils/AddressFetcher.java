@@ -23,7 +23,7 @@ public class AddressFetcher {
                 .build().toString();
         String jsonString = client.getJSONResponse(url, null, "GET");
         Log.i(TAG, "Received JSON: " + jsonString);
-        String result = "";
+        String result = null;
         try {
             JSONObject jsonResponse = new JSONObject(jsonString);
             result = parseJSON(jsonResponse);
@@ -35,7 +35,7 @@ public class AddressFetcher {
     }
 
     private String parseJSON(JSONObject jsonObject) throws JSONException {
-        String address = "your current address";
+        String address = null;
         String status = jsonObject.getString("status");
         Log.d(TAG, "status: " + status);
         if (status.equalsIgnoreCase("OK")) {

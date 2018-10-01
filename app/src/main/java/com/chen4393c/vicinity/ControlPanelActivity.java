@@ -55,20 +55,27 @@ public class ControlPanelActivity extends AppCompatActivity
         mPagerAdapter = new PagerAdapter(getSupportFragmentManager());
         pager.setAdapter(mPagerAdapter);
         pager.setCurrentItem(0);
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+                UIUtils.detectAndHideKeyboard(ControlPanelActivity.this);
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                UIUtils.detectAndHideKeyboard(ControlPanelActivity.this);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
 
         // Give the TabLayout the ViewPager
         mTabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         mTabLayout.setupWithViewPager(pager);
         setupTabIcons();
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -228,6 +235,10 @@ public class ControlPanelActivity extends AppCompatActivity
     }
 
     private void setupAddress() {
-        mAddressTextView.setText(Config.address);
+        if (Config.address != null) {
+            mAddressTextView.setText(Config.address);
+        } else {
+            mAddressTextView.setText(getResources().getText(R.string.location_error_subtitle));
+        }
     }
 }

@@ -5,75 +5,98 @@
               android:paddingLeft="@dimen/layout_margin"
               android:paddingRight="@dimen/layout_margin"
               android:paddingTop="@dimen/layout_margin"
+              android:gravity="center_horizontal"
               android:background="@color/gray"
               android:orientation="vertical">
 
-    <!-- username tag-->
-    <TextView
+    <ProgressBar
+        android:id="@+id/login_progress"
+        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/username_title"
-        android:fontFamily="Roboto"
-        android:textColor="@color/white"
-        android:textSize="@dimen/title_text_size"/>
+        android:layout_marginBottom="8dp"
+        android:visibility="gone"/>
 
-    <!-- username edit area-->
-    <android.support.design.widget.TextInputLayout
+    <ScrollView
+        android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <AutoCompleteTextView
-            android:id="@+id/user_name_text_view"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:digits="abcdefghijklmnopqrstuvwxyz0123456789"
-            android:hint="@string/username_hint_text"
-            android:textColor="@color/white"
-            android:inputType="none"
-            android:maxLines="1"
-            android:singleLine="true"/>
+            android:orientation="vertical">
 
-    </android.support.design.widget.TextInputLayout>
+            <!-- username tag-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/username_title"
+                android:fontFamily="Roboto"
+                android:textColor="@color/white"
+                android:textSize="@dimen/title_text_size"/>
 
-    <!-- password tag-->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="Roboto"
-        android:textSize="@dimen/title_text_size"
-        android:textColor="@color/white"
-        android:text="@string/password_title" />
+            <!-- username edit area-->
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    <!-- password edit area-->
-    <EditText
-        android:id="@+id/editTextPassword"
-        android:fontFamily="Roboto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:textColor="#FFFFFF"
-        android:layout_gravity="center_horizontal" />
+                <AutoCompleteTextView
+                    android:id="@+id/user_name_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:digits="abcdefghijklmnopqrstuvwxyz0123456789"
+                    android:hint="@string/username_hint_text"
+                    android:textColor="@color/white"
+                    android:inputType="none"
+                    android:maxLines="1"
+                    android:singleLine="true"/>
 
-    <!-- button to login-->
-    <Button
-        android:id="@+id/submit"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/button_height"
-        android:layout_marginTop="@dimen/view_margin"
-        android:text="@string/sign_in_button_text"
-        android:textColor="@android:color/white"
-        android:fontFamily="Roboto"
-        android:background="@drawable/login_button"/>
+            </android.support.design.widget.TextInputLayout>
 
-    <!-- button to register-->
-    <Button
-        android:id="@+id/register"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/button_height"
-        android:layout_marginTop="@dimen/view_margin"
-        android:text="@string/sign_up_button_text"
-        android:textColor="@android:color/white"
-        android:fontFamily="Roboto"
-        android:background="@drawable/sign_up_button"/>
+            <!-- password tag-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="Roboto"
+                android:textSize="@dimen/title_text_size"
+                android:textColor="@color/white"
+                android:text="@string/password_title" />
+
+            <!-- password edit area-->
+            <EditText
+                android:id="@+id/editTextPassword"
+                android:fontFamily="Roboto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:textColor="#FFFFFF"
+                android:layout_gravity="center_horizontal" />
+
+            <!-- button to login-->
+            <Button
+                android:id="@+id/submit"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginTop="@dimen/view_margin"
+                android:text="@string/sign_in_button_text"
+                android:textColor="@android:color/white"
+                android:fontFamily="Roboto"
+                android:background="@drawable/login_button"/>
+
+            <!-- button to register-->
+            <Button
+                android:id="@+id/register"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginTop="@dimen/view_margin"
+                android:text="@string/sign_up_button_text"
+                android:textColor="@android:color/white"
+                android:fontFamily="Roboto"
+                android:background="@drawable/sign_up_button"/>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>
