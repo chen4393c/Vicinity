@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "927401071472",
+    "firebase_url": "https://vicinity-bb6de.firebaseio.com",
+    "project_id": "vicinity-bb6de",
+    "storage_bucket": "vicinity-bb6de.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:927401071472:android:ecffb2680f425791",
+        "android_client_info": {
+          "package_name": "com.chen4393c.vicinity"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "927401071472-t0b15qsejeeo2q4df03duv8p3oqqghsd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.chen4393c.vicinity",
+            "certificate_hash": "65d191f2713410a03671e0c23ac30dcc516a75c1"
+          }
+        },
+        {
+          "client_id": "927401071472-ipi7ihvedlcamk2opg5akmgejkg9tgsn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBj5cz4B09ni_DrADdlB3orqbz7YZ1hUBM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "927401071472-ipi7ihvedlcamk2opg5akmgejkg9tgsn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

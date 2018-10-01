@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray"
+    android:gravity="center">
+
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_margin="@dimen/view_margin"
+        android:text="@string/sign_out_button_text"
+        android:textColor="@color/white"
+        android:fontFamily="Roboto"
+        android:background="@drawable/logout_button"/>
+
+</LinearLayout>
