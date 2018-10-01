@@ -24,10 +24,7 @@ import com.chen4393c.vicinity.main.LoginFragment;
 import com.chen4393c.vicinity.main.MapFragment;
 import com.chen4393c.vicinity.utils.AddressFetcher;
 import com.chen4393c.vicinity.utils.LocationTracker;
-
-import org.json.JSONObject;
-
-import java.text.DecimalFormat;
+import com.chen4393c.vicinity.utils.UIUtils;
 
 public class ControlPanelActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -35,7 +32,13 @@ public class ControlPanelActivity extends AppCompatActivity
     private LocationTracker mLocationTracker;
     private AddressFetcher mAddressFetcher;
 
+    private TabLayout mTabLayout;
     private TextView mAddressTextView;
+    private PagerAdapter mPagerAdapter;
+    private static final int[] tabIcons = {
+            R.drawable.ic_tab_account,
+            R.drawable.ic_tab_map,
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +52,14 @@ public class ControlPanelActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         ViewPager pager = (ViewPager) findViewById(R.id.view_pager);
-        pager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
+        mPagerAdapter = new PagerAdapter(getSupportFragmentManager());
+        pager.setAdapter(mPagerAdapter);
         pager.setCurrentItem(0);
 
         // Give the TabLayout the ViewPager
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        tabLayout.setupWithViewPager(pager);
+        mTabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        mTabLayout.setupWithViewPager(pager);
+        setupTabIcons();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +81,8 @@ public class ControlPanelActivity extends AppCompatActivity
                         (TextView) drawerView.findViewById(R.id.user_name_nav_header);
                 mAddressTextView =
                         (TextView) drawerView.findViewById(R.id.user_location_nav_header);
+
+                UIUtils.detectAndHideKeyboard(ControlPanelActivity.this);
 
                 // Respond when the drawer is opened
                 if (Config.username == null) {
@@ -189,6 +196,12 @@ public class ControlPanelActivity extends AppCompatActivity
         public CharSequence getPageTitle(int position) {
             // Generate title based on item position
             return tabTitles[position];
+        }
+    }
+
+    private void setupTabIcons() {
+        for (int i = 0; i < mPagerAdapter.getCount(); i++) {
+            mTabLayout.getTabAt(i).setIcon(tabIcons[i]);
         }
     }
 

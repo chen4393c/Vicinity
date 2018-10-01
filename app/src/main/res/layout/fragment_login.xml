@@ -6,11 +6,11 @@
              tools:context=".main.LoginFragment">
 
     <include
-        android:id="@+id/loginLayout"
+        android:id="@+id/login_layout"
         layout="@layout/login"/>
 
     <include
-        android:id="@+id/logoutLayout"
+        android:id="@+id/logout_layout"
         layout="@layout/logout"/>
 
 </FrameLayout>

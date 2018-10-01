@@ -21,7 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import static com.chen4393c.vicinity.utils.SecurityUtils.md5Encryption;
-import static com.chen4393c.vicinity.utils.UIUtils.hideKeyboard;
+import static com.chen4393c.vicinity.utils.UIUtils.detectAndHideKeyboard;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,8 +53,8 @@ public class LoginFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        loginLayout = view.findViewById(R.id.loginLayout);
-        logoutLayout = view.findViewById(R.id.logoutLayout);
+        loginLayout = view.findViewById(R.id.login_layout);
+        logoutLayout = view.findViewById(R.id.logout_layout);
         updateUI();
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -114,7 +114,7 @@ public class LoginFragment extends Fragment {
                                         .child("userPassword")
                                         .getValue()))) {
                             Config.username = username;
-                            hideKeyboard(getActivity());
+                            detectAndHideKeyboard(getActivity());
                             updateUI();
                         } else {
                             Toast.makeText(getActivity(),
