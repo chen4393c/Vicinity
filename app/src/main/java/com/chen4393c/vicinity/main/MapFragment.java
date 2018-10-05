@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.chen4393c.vicinity.Constant;
 import com.chen4393c.vicinity.R;
 import com.chen4393c.vicinity.settings.SettingsActivity;
+import com.chen4393c.vicinity.utils.LocationTracker;
 import com.chen4393c.vicinity.utils.QueryPreferences;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -34,17 +35,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private static final String TAG = "MapFragment";
 
+    private LocationTracker mLocationTracker;
+
     private View mParentView;
     private MapView mMapView;
     private GoogleMap mMap;
 
     public static MapFragment newInstance() {
-        MapFragment mapFragment = new MapFragment();
-        return mapFragment;
+        return new MapFragment();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mParentView = inflater.inflate(R.layout.fragment_map, container, false);
@@ -68,9 +70,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onResume();
         Log.d(TAG,"onResume()");
         mMapView.onResume();
-        if (mMap != null) {
-            setTheme();
-        }
+        setTheme();
     }
 
     @Override
@@ -94,20 +94,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "onMapReady(GoogleMap)");
-        MapsInitializer.initialize(getContext());
+        Context context = getContext();
+        if (context == null) {
+            Log.e(TAG, "getContext() == null");
+            return;
+        }
+        MapsInitializer.initialize(context);
 
         mMap = googleMap;
         setTheme();
 
-        double latitude = 17.385044;
-        double longitude = 78.486671;
+        mLocationTracker = new LocationTracker(getActivity());
+        mLocationTracker.getLocation();
 
-        LatLng point = new LatLng(latitude, longitude);
+        double lat = mLocationTracker.getLatitude();
+        double lon = mLocationTracker.getLongitude();
+        Log.i(TAG, "lat, lon: " + lat + ", " + lon);
+        LatLng point = new LatLng(lat, lon);
 
         MarkerOptions marker = new MarkerOptions()
                 .position(point)
-                .title("This is your focus")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
+                .title(getResources().getString(R.string.map_marker_title))
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
 
         googleMap.addMarker(marker);
 
@@ -118,10 +126,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void setTheme() {
+        if (mMap == null) {
+            return;
+        }
         // Load theme index from shared preferences
         int themeIndex = QueryPreferences.getThemeIndex(getActivity());
-
+        Context context = getContext();
+        if (context == null) {
+            Log.e(TAG, "getContext() == null");
+            return;
+        }
         mMap.setMapStyle(MapStyleOptions
-                .loadRawResourceStyle(getActivity(), Constant.mapThemes[themeIndex]));
+                .loadRawResourceStyle(context, Constant.mapThemes[themeIndex]));
     }
 }

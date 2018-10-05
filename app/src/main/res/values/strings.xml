@@ -34,6 +34,7 @@
     </string>
 
     <string name="google_maps_key">AIzaSyCHgXce5CiOoCy_yffke3S-alnAdIiApNw</string>
+    <string name="map_marker_title">This is your focus</string>
 
     <string name="title_activity_settings">Settings</string>
 

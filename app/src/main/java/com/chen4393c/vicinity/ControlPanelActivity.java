@@ -1,8 +1,10 @@
 package com.chen4393c.vicinity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -34,7 +36,6 @@ public class ControlPanelActivity extends AppCompatActivity
     private static final String TAG = "ControlPanelActivity";
 
     private LocationTracker mLocationTracker;
-    private AddressFetcher mAddressFetcher;
 
     private TabLayout mTabLayout;
     private TextView mAddressTextView;
@@ -49,7 +50,6 @@ public class ControlPanelActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         mLocationTracker = new LocationTracker(this);
-        mAddressFetcher = new AddressFetcher();
 
         setContentView(R.layout.activity_control_panel);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -168,7 +168,7 @@ public class ControlPanelActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         Intent intent = new Intent();
@@ -190,7 +190,7 @@ public class ControlPanelActivity extends AppCompatActivity
         private final int NUM_ITEMS = 2;
         private String tabTitles[] = new String[] { "Account", "Map" };
 
-        public PagerAdapter(FragmentManager fragmentManager) {
+        PagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
         }
 
@@ -231,14 +231,14 @@ public class ControlPanelActivity extends AppCompatActivity
         private double mLatitude;
         private double mLongitude;
 
-        public FetchAddressTask(double latitude, double longitude) {
+        FetchAddressTask(double latitude, double longitude) {
             mLatitude = latitude;
             mLongitude = longitude;
         }
 
         @Override
         protected String doInBackground(Void... voids) {
-            return mAddressFetcher.fetchAddress(mLatitude, mLongitude);
+            return new AddressFetcher().fetchAddress(mLatitude, mLongitude);
         }
 
         @Override
