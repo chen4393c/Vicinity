@@ -10,9 +10,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.chen4393c.vicinity.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,6 +82,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        MapsInitializer.initialize(getContext());
+        googleMap.setMapStyle(MapStyleOptions
+                .loadRawResourceStyle(getActivity(), R.raw.theme_dark));
+        double latitude = 17.385044;
+        double longitude = 78.486671;
 
+        LatLng point = new LatLng(latitude, longitude);
+
+        MarkerOptions marker = new MarkerOptions()
+                .position(point)
+                .title("This is your focus")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
+
+        googleMap.addMarker(marker);
+
+        CameraPosition cameraPosition = CameraPosition.builder()
+                .target(point).zoom(12).build();
+
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 }
