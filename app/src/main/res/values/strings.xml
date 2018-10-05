@@ -27,5 +27,5 @@
         Your username or password is incorrect, please sign in again.
     </string>
 
-    <string name="hello_blank_fragment">Map fragment</string>
+    <string name="google_maps_key">AIzaSyCHgXce5CiOoCy_yffke3S-alnAdIiApNw</string>
 </resources>
