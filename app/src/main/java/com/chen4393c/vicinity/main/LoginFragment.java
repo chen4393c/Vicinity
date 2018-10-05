@@ -131,8 +131,8 @@ public class LoginFragment extends Fragment {
                                 .child(username)
                                 .child("userPassword")
                                 .getValue()))) {
+                    // success
                     Config.username = username;
-
                     try {
                         // Simulate network access.
                         Thread.sleep(1500);
@@ -142,6 +142,7 @@ public class LoginFragment extends Fragment {
                     showProgress(false);
                     updateUI();
                 } else {
+                    // failed
                     Toast.makeText(getActivity(),
                             getResources().getText(R.string.sign_in_failed_toast),
                             Toast.LENGTH_SHORT).show();
@@ -150,7 +151,7 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                showProgress(false);
             }
         });
     }
