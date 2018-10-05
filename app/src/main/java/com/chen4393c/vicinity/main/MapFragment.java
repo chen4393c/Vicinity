@@ -83,6 +83,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         MapsInitializer.initialize(getContext());
+
+
+
         googleMap.setMapStyle(MapStyleOptions
                 .loadRawResourceStyle(getActivity(), R.raw.theme_dark));
         double latitude = 17.385044;

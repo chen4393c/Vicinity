@@ -1,5 +1,6 @@
 package com.chen4393c.vicinity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import com.chen4393c.vicinity.main.LoginFragment;
 import com.chen4393c.vicinity.main.MapFragment;
+import com.chen4393c.vicinity.settings.SettingsActivity;
 import com.chen4393c.vicinity.utils.AddressFetcher;
 import com.chen4393c.vicinity.utils.LocationTracker;
 import com.chen4393c.vicinity.utils.UIUtils;
@@ -147,11 +149,13 @@ public class ControlPanelActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        Intent intent = new Intent();
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_gallery) {
-
+        if (id == R.id.nav_settings) {
+            intent.setClass(this, SettingsActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
