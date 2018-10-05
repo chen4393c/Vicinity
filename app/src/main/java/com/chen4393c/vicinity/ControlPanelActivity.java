@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -28,6 +29,8 @@ import com.chen4393c.vicinity.utils.UIUtils;
 
 public class ControlPanelActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final String TAG = "ControlPanelActivity";
 
     private LocationTracker mLocationTracker;
     private AddressFetcher mAddressFetcher;
@@ -115,6 +118,12 @@ public class ControlPanelActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume()");
+    }
+
+    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -137,9 +146,12 @@ public class ControlPanelActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        Intent intent = new Intent();
 
-        //noinspection SimplifiableIfStatement
+        // noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            intent.setClass(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -149,9 +161,9 @@ public class ControlPanelActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        Intent intent = new Intent();
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Intent intent = new Intent();
 
         if (id == R.id.nav_settings) {
             intent.setClass(this, SettingsActivity.class);

@@ -21,7 +21,6 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.chen4393c.vicinity.R;
-import com.chen4393c.vicinity.utils.QueryPreferences;
 
 import java.util.List;
 
@@ -54,8 +53,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 // the preference's 'entries' list.
                 ListPreference listPreference = (ListPreference) preference;
                 int index = listPreference.findIndexOfValue(stringValue);
-
-                Log.i(TAG, "onPreferenceChange: " + listPreference.getEntries()[index]);
 
                 // Set the summary to reflect the new value.
                 preference.setSummary(
@@ -175,9 +172,19 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class GeneralPreferenceFragment extends PreferenceFragment {
+
+        private final static String TAG = GeneralPreferenceFragment.class.getName();
+        public final static String SETTINGS_SHARED_PREFERENCES_FILE_NAME =
+                TAG + ".SETTINGS_SHARED_PREFERENCES_FILE_NAME";
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            Log.d(TAG, "GeneralPreferenceFragment.onCreate()");
+
+            // Define the settings file to use by this settings fragment
+            getPreferenceManager().setSharedPreferencesName(SETTINGS_SHARED_PREFERENCES_FILE_NAME);
+
             addPreferencesFromResource(R.xml.pref_general);
             setHasOptionsMenu(true);
 
