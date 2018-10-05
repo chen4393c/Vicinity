@@ -25,6 +25,7 @@ import com.chen4393c.vicinity.main.MapFragment;
 import com.chen4393c.vicinity.settings.SettingsActivity;
 import com.chen4393c.vicinity.utils.AddressFetcher;
 import com.chen4393c.vicinity.utils.LocationTracker;
+import com.chen4393c.vicinity.utils.QueryPreferences;
 import com.chen4393c.vicinity.utils.UIUtils;
 
 public class ControlPanelActivity extends AppCompatActivity
@@ -107,7 +108,14 @@ public class ControlPanelActivity extends AppCompatActivity
                     } else {
                         setupAddress();
                     }
-                    userNameTextView.setText(Config.username);
+
+                    String displayName = QueryPreferences
+                            .getDisplayName(ControlPanelActivity.this);
+                    if (displayName != null) {
+                        userNameTextView.setText(displayName);
+                    } else {
+                        userNameTextView.setText(Config.username);
+                    }
                 }
             }
         });
@@ -168,15 +176,7 @@ public class ControlPanelActivity extends AppCompatActivity
         if (id == R.id.nav_settings) {
             intent.setClass(this, SettingsActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_account) {
-
         } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
 
         }
 

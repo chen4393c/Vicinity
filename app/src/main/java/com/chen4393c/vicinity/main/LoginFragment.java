@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -67,7 +68,7 @@ public class LoginFragment extends Fragment {
         mPasswordEditText = (EditText) view.findViewById(R.id.editTextPassword);
         Button submitButton = (Button) view.findViewById(R.id.submit);
         Button registerButton = (Button) view.findViewById(R.id.register);
-        Button logoutButton = (Button) view.findViewById(R.id.logout);
+        final Button logoutButton = (Button) view.findViewById(R.id.logout);
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,7 +88,20 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Config.username = null;
-                updateUI();
+
+                int cx = logoutButton.getWidth() / 2;
+                int cy = logoutButton.getHeight() / 2;
+                float radius = logoutButton.getWidth();
+                Animator animator = ViewAnimationUtils
+                        .createCircularReveal(logoutButton, cx, cy, radius, 0);
+                animator.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        updateUI();
+                    }
+                });
+                animator.start();
             }
         });
 

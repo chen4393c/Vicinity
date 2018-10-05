@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.chen4393c.vicinity.Constant;
 import com.chen4393c.vicinity.R;
 import com.chen4393c.vicinity.settings.SettingsActivity;
+import com.chen4393c.vicinity.utils.QueryPreferences;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -118,17 +119,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private void setTheme() {
         // Load theme index from shared preferences
-        SharedPreferences preferences = getActivity().getSharedPreferences(
-                SettingsActivity.GeneralPreferenceFragment.SETTINGS_SHARED_PREFERENCES_FILE_NAME,
-                Context.MODE_PRIVATE);
-        Log.i(TAG, "example_list: " + preferences.getAll());
-
-        int themeIndex;
-        try {
-            themeIndex = Integer.valueOf(preferences.getString("example_list", "0"));
-        } catch (NumberFormatException e) {
-            themeIndex = 0;
-        }
+        int themeIndex = QueryPreferences.getThemeIndex(getActivity());
 
         mMap.setMapStyle(MapStyleOptions
                 .loadRawResourceStyle(getActivity(), Constant.mapThemes[themeIndex]));
