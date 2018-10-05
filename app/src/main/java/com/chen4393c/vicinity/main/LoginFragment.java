@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.chen4393c.vicinity.Config;
-import com.chen4393c.vicinity.ControlPanelActivity;
 import com.chen4393c.vicinity.R;
 import com.chen4393c.vicinity.model.User;
 import com.chen4393c.vicinity.utils.UIUtils;
@@ -26,7 +25,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import static com.chen4393c.vicinity.utils.SecurityUtils.md5Encryption;
-import static com.chen4393c.vicinity.utils.UIUtils.detectAndHideKeyboard;
 
 /**
  * A simple {@link Fragment} subclass.
