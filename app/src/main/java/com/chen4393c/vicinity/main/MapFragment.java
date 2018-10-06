@@ -6,9 +6,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -179,13 +177,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void showDialog(Context context) {
-        final View dialogView = View.inflate(getActivity(), R.layout.dialog, null);
+        final View dialogView = View.inflate(context, R.layout.dialog, null);
         mViewSwitcher = (ViewSwitcher) dialogView.findViewById(R.id.view_switcher);
-        mDialog = new Dialog(getActivity(), R.style.AppTheme);
+        mDialog = new Dialog(context, R.style.AppTheme);
         mDialog.requestWindowFeature(Window.FEATURE_ACTION_BAR);
 
         Toolbar toolbar = dialogView.findViewById(R.id.toolbar_dialog);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) context).setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -213,10 +211,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        mDialog.getWindow().setBackgroundDrawable(
-                new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        mDialog.show();
-        setupRecyclerView(dialogView);
+        Window dialogWindow = mDialog.getWindow();
+        if (dialogWindow != null) {
+            dialogWindow.setBackgroundDrawable(
+                    new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            mDialog.show();
+            setupRecyclerView(dialogView);
+        }
     }
 
     // Add animation to Floating Action Button
