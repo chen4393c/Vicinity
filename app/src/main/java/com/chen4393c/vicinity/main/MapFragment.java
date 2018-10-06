@@ -3,6 +3,7 @@ package com.chen4393c.vicinity.main;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,18 +25,23 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.chen4393c.vicinity.Constant;
+import com.chen4393c.vicinity.ControlPanelActivity;
 import com.chen4393c.vicinity.R;
 import com.chen4393c.vicinity.main.report.ReportRecyclerViewAdapter;
 import com.chen4393c.vicinity.model.Item;
 import com.chen4393c.vicinity.utils.LocationTracker;
 import com.chen4393c.vicinity.utils.QueryPreferences;
+import com.chen4393c.vicinity.utils.UIUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -201,6 +207,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                UIUtils.detectAndHideKeyboard(getActivity());
                 animateDialog(dialogView, false, mDialog);
             }
         });
@@ -218,12 +225,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
                 if (i == KeyEvent.KEYCODE_BACK) {
+//                    UIUtils.detectAndHideKeyboard(getActivity());
                     animateDialog(dialogView, false, mDialog);
                     return true;
                 }
                 return false;
             }
         });
+
+        Animation slideIn = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
+        Animation slideOut = AnimationUtils.loadAnimation(context, android.R.anim.slide_out_right);
+        mViewSwitcher.setInAnimation(slideIn);
+        mViewSwitcher.setOutAnimation(slideOut);
 
         Window dialogWindow = mDialog.getWindow();
         if (dialogWindow != null) {
@@ -300,6 +313,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                Toast.makeText(getContext(), "clicked!", Toast.LENGTH_SHORT).show();
+//                Activity activity = MapFragment.this.getActivity();
+//                Log.d(TAG, "activity == null?: " + (activity == null));
+//                if (activity != null) {
+//                    UIUtils.detectAndHideKeyboard(activity); // not working
+//                }
                 mViewSwitcher.showPrevious();
             }
         });
