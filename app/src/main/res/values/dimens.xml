@@ -20,4 +20,15 @@
     <dimen name="report_event_master_item_image_height">100dp</dimen>
     <dimen name="report_event_master_item_image_margin">30dp</dimen>
     <dimen name="report_event_master_item_text_size">15sp</dimen>
+
+    <dimen name="report_event_detail_event_type_text_size">25sp</dimen>
+    <dimen name="report_event_detail_event_type_margin_top">50dp</dimen>
+    <dimen name="report_event_detail_event_type_image">130dp</dimen>
+    <dimen name="report_event_detail_event_camera_image_width">100dp</dimen>
+    <dimen name="report_event_detail_event_camera_image_margin">15dp</dimen>
+    <dimen name="report_event_detail_separator_width">1dp</dimen>
+    <dimen name="report_event_detail_separator_margin">18dp</dimen>
+    <dimen name="report_event_detail_comment_margin">15dp</dimen>
+    <dimen name="report_event_detail_comment_padding">5dp</dimen>
+    <dimen name="report_event_detail_horizontal_layout_height">100dp</dimen>
 </resources>

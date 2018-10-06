@@ -6,6 +6,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,6 +24,10 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.chen4393c.vicinity.Constant;
@@ -59,7 +64,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private Dialog mDialog;
     private RecyclerView mRecyclerView;
     private ReportRecyclerViewAdapter mAdapter;
+
     private ViewSwitcher mViewSwitcher;
+
+    // event detail
+    private ImageView mImageCamera;
+    private Button mBackButton;
+    private Button mSendButton;
+    private EditText mCommentEditText;
+    private ImageView mEventTypeImage;
+    private TextView mTypeTextView;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -216,7 +230,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             dialogWindow.setBackgroundDrawable(
                     new ColorDrawable(android.graphics.Color.TRANSPARENT));
             mDialog.show();
-            setupRecyclerView(dialogView);
+            setupRecyclerView(dialogView, getContext());
+            setUpEventDetails(dialogView);
         }
     }
 
@@ -252,7 +267,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private void setupRecyclerView(View dialogView) {
+    private void setupRecyclerView(View dialogView, final Context context) {
         mRecyclerView = dialogView.findViewById(R.id.report_event_recycler_view);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         List<Item> items = new ArrayList<>();
@@ -261,6 +276,32 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             items.add(new Item(labels[i], Constant.reportEventDrawableIds[i]));
         }
         mAdapter = new ReportRecyclerViewAdapter(getActivity(), items);
+        mAdapter.setOnClickListener(new ReportRecyclerViewAdapter.EventOnClickListener() {
+            @Override
+            public void setItem(Item item) {
+                if (mViewSwitcher != null) {
+                    mViewSwitcher.showNext();
+                    mTypeTextView.setText(item.getDrawableLabel());
+                    mEventTypeImage.setImageDrawable(context.getDrawable(item.getDrawableId()));
+                }
+            }
+        });
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    private void setUpEventDetails(final View dialogView) {
+        mImageCamera = (ImageView) dialogView.findViewById(R.id.event_camera_image);
+        mBackButton = (Button) dialogView.findViewById(R.id.event_back_button);
+        mSendButton = (Button) dialogView.findViewById(R.id.event_send_button);
+        mCommentEditText = (EditText) dialogView.findViewById(R.id.event_comment);
+        mEventTypeImage = (ImageView) dialogView.findViewById(R.id.event_image);
+        mTypeTextView = (TextView)dialogView.findViewById(R.id.event_type);
+
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mViewSwitcher.showPrevious();
+            }
+        });
     }
 }

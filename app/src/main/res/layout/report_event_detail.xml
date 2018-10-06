@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/report_event_detail"
+                android:orientation="vertical"
+                android:background="@color/gray"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/event_type"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="@dimen/report_event_detail_event_type_text_size"
+        android:layout_marginTop="@dimen/report_event_detail_event_type_margin_top"
+        android:layout_centerHorizontal="true"
+        tools:text="Event Type"/>
+
+    <ImageView
+        android:id="@+id/event_image"
+        android:layout_width="@dimen/report_event_detail_event_type_image"
+        android:layout_height="@dimen/report_event_detail_event_type_image"
+        android:layout_below="@+id/event_type"
+        android:layout_marginTop="@dimen/report_event_detail_event_type_margin_top"
+        android:layout_centerHorizontal="true"
+        tools:src="@drawable/policeman"/>
+
+    <LinearLayout
+        android:id="@+id/event_comment_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/report_event_detail_horizontal_layout_height"
+        android:orientation="horizontal"
+        android:layout_below="@+id/event_image">
+
+        <ImageView
+            android:id="@+id/event_camera_image"
+            android:layout_width="@dimen/report_event_detail_event_camera_image_width"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/report_event_detail_event_camera_image_margin"
+            android:src="@drawable/camera"/>
+
+        <View
+            android:layout_width="@dimen/report_event_detail_separator_width"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/report_event_detail_separator_margin"
+            android:layout_marginBottom="@dimen/report_event_detail_separator_margin"
+            android:background="@color/colorPrimaryDark"/>
+
+        <EditText
+            android:id="@+id/event_comment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/text_input_border"
+            android:layout_margin="@dimen/report_event_detail_comment_margin"
+            android:paddingStart="@dimen/report_event_detail_comment_padding"
+            android:paddingEnd="@dimen/report_event_detail_comment_padding"
+            android:textColor="@color/white"
+            android:hint="@string/report_event_detail_comment_hint"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/event_send"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/report_event_detail_horizontal_layout_height"
+        android:orientation="horizontal"
+        android:layout_below="@+id/event_comment_layout">
+
+        <Button
+            android:id="@+id/event_back_button"
+            android:layout_width="@dimen/report_event_detail_event_camera_image_width"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/report_event_detail_comment_margin"
+            android:background="@drawable/login_button"
+            android:text="@string/report_event_detail_back_btn_text"
+            android:textColor="@color/white"/>
+
+        <View
+            android:layout_width="@dimen/report_event_detail_separator_width"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/report_event_detail_separator_margin"
+            android:layout_marginBottom="@dimen/report_event_detail_separator_margin"
+            android:background="@color/colorPrimaryDark"/>
+
+        <Button
+            android:id="@+id/event_send_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/sign_up_button"
+            android:layout_margin="@dimen/report_event_detail_comment_margin"
+            android:text="@string/report_event_detail_send_btn_text"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

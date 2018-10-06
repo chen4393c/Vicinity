@@ -29,6 +29,7 @@
         android:layout_height="match_parent">
 
         <include layout="@layout/report_event_master"/>
+        <include layout="@layout/report_event_detail"/>
 
     </ViewSwitcher>
 

@@ -52,6 +52,10 @@
         <item>Slippery</item>
     </string-array>
 
+    <string name="report_event_detail_comment_hint">Enter your comment here!</string>
+    <string name="report_event_detail_back_btn_text">Back</string>
+    <string name="report_event_detail_send_btn_text">Send</string>
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

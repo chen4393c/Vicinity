@@ -22,10 +22,20 @@ public class ReportRecyclerViewAdapter
     private List<Item> mItems;
     private LayoutInflater mInflater;
 
+    private EventOnClickListener mOnClickListener;
+
     public ReportRecyclerViewAdapter(Context context, List<Item> items) {
         mContext = context;
         this.mInflater = LayoutInflater.from(context);
         this.mItems = items;
+    }
+
+    public interface EventOnClickListener {
+        void setItem(Item item);
+    }
+
+    public void setOnClickListener(EventOnClickListener callback) {
+        mOnClickListener = callback;
     }
 
     /**
@@ -54,7 +64,7 @@ public class ReportRecyclerViewAdapter
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mContext, "clicked!", Toast.LENGTH_SHORT).show();
+                mOnClickListener.setItem(item);
             }
         });
     }
