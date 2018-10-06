@@ -207,7 +207,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                UIUtils.detectAndHideKeyboard(getActivity());
+                Activity activity = MapFragment.this.getActivity();
+                if (activity != null) {
+                    UIUtils.hideSoftKeyboard(mCommentEditText, activity); // working
+                }
                 animateDialog(dialogView, false, mDialog);
             }
         });
@@ -225,7 +228,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
                 if (i == KeyEvent.KEYCODE_BACK) {
-//                    UIUtils.detectAndHideKeyboard(getActivity());
                     animateDialog(dialogView, false, mDialog);
                     return true;
                 }
@@ -308,17 +310,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mSendButton = (Button) dialogView.findViewById(R.id.event_send_button);
         mCommentEditText = (EditText) dialogView.findViewById(R.id.event_comment);
         mEventTypeImage = (ImageView) dialogView.findViewById(R.id.event_image);
-        mTypeTextView = (TextView)dialogView.findViewById(R.id.event_type);
+        mTypeTextView = (TextView) dialogView.findViewById(R.id.event_type);
 
         mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Toast.makeText(getContext(), "clicked!", Toast.LENGTH_SHORT).show();
-//                Activity activity = MapFragment.this.getActivity();
-//                Log.d(TAG, "activity == null?: " + (activity == null));
-//                if (activity != null) {
-//                    UIUtils.detectAndHideKeyboard(activity); // not working
-//                }
+                Activity activity = MapFragment.this.getActivity();
+                if (activity != null) {
+                    UIUtils.hideSoftKeyboard(mCommentEditText, activity); // working
+                }
                 mViewSwitcher.showPrevious();
             }
         });

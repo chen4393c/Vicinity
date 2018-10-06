@@ -61,7 +61,7 @@
                 android:fontFamily="Roboto"
                 android:textSize="@dimen/title_text_size"
                 android:textColor="@color/white"
-                android:text="@string/password_title" />
+                android:text="@string/password_title"/>
 
             <!-- password edit area-->
             <EditText
@@ -71,7 +71,9 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:textColor="#FFFFFF"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:maxLines="1"
+                android:imeOptions="actionDone"/>
 
             <!-- button to login-->
             <Button
