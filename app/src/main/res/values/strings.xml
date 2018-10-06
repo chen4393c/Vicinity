@@ -40,6 +40,18 @@
 
     <string name="report_event_master_title">Report Event</string>
 
+    <string-array name="report_event_master_item_names">
+        <item>Police</item>
+        <item>Traffic</item>
+        <item>No Entry</item>
+        <item>No Parking</item>
+        <item>Security Camera</item>
+        <item>Headlight</item>
+        <item>Speeding</item>
+        <item>Construction</item>
+        <item>Slippery</item>
+    </string-array>
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

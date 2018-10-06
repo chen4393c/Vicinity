@@ -6,13 +6,17 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -25,6 +29,8 @@ import android.widget.ViewSwitcher;
 
 import com.chen4393c.vicinity.Constant;
 import com.chen4393c.vicinity.R;
+import com.chen4393c.vicinity.main.report.ReportRecyclerViewAdapter;
+import com.chen4393c.vicinity.model.Item;
 import com.chen4393c.vicinity.utils.LocationTracker;
 import com.chen4393c.vicinity.utils.QueryPreferences;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -38,6 +44,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -50,6 +59,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     FloatingActionButton mReportFAB;
     private Dialog mDialog;
+    private RecyclerView mRecyclerView;
+    private ReportRecyclerViewAdapter mAdapter;
     private ViewSwitcher mViewSwitcher;
 
     public static MapFragment newInstance() {
@@ -147,8 +158,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         googleMap.addMarker(marker);
 
-        CameraPosition cameraPosition = CameraPosition.builder()
-                .target(point).zoom(12).build();
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(point)      // Sets the center of the map to Mountain View
+                .zoom(16)// Sets the zoom
+                .bearing(90)           // Sets the orientation of the camera to east
+                .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                .build();                   // Creates a CameraPosition from the builder
 
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
@@ -201,6 +216,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mDialog.getWindow().setBackgroundDrawable(
                 new ColorDrawable(android.graphics.Color.TRANSPARENT));
         mDialog.show();
+        setupRecyclerView(dialogView);
     }
 
     // Add animation to Floating Action Button
@@ -233,5 +249,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             anim.setDuration(500);
             anim.start();
         }
+    }
+
+    private void setupRecyclerView(View dialogView) {
+        mRecyclerView = dialogView.findViewById(R.id.report_event_recycler_view);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        List<Item> items = new ArrayList<>();
+        String[] labels = getResources().getStringArray(R.array.report_event_master_item_names);
+        for (int i = 0; i < labels.length; i++) {
+            items.add(new Item(labels[i], Constant.reportEventDrawableIds[i]));
+        }
+        mAdapter = new ReportRecyclerViewAdapter(getActivity(), items);
+        mRecyclerView.setAdapter(mAdapter);
     }
 }

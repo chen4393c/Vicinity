@@ -12,4 +12,16 @@ public class Constant {
     };
 
     public static final int FAB_MARGIN = 24;
+
+    public static int[] reportEventDrawableIds = {
+            R.drawable.policeman,
+            R.drawable.traffic,
+            R.drawable.no_entry,
+            R.drawable.no_parking,
+            R.drawable.camera,
+            R.drawable.lights,
+            R.drawable.speeding,
+            R.drawable.construction,
+            R.drawable.slippery
+    };
 }
