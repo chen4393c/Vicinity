@@ -169,6 +169,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         Log.i(TAG, "lat, lon: " + lat + ", " + lon);
         LatLng point = new LatLng(lat, lon);
 
+        // clear all previous markers first, then we can add marker
+        googleMap.clear();
         MarkerOptions marker = new MarkerOptions()
                 .position(point)
                 .title(getResources().getString(R.string.map_marker_title))
