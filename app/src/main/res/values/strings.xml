@@ -38,6 +38,8 @@
 
     <string name="title_activity_settings">Settings</string>
 
+    <string name="report_event_master_title">Report Event</string>
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

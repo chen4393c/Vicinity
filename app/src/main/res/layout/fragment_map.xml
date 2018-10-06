@@ -21,7 +21,7 @@
         android:src="@drawable/ic_fab_center_focus_strong"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/fab_report"
         android:layout_width="@dimen/fab_size"
         android:layout_height="@dimen/fab_size"
         android:layout_alignParentBottom="true"

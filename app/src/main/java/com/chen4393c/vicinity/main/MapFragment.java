@@ -1,20 +1,30 @@
 package com.chen4393c.vicinity.main;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.app.Dialog;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.DialogInterface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.ViewSwitcher;
 
 import com.chen4393c.vicinity.Constant;
 import com.chen4393c.vicinity.R;
-import com.chen4393c.vicinity.settings.SettingsActivity;
 import com.chen4393c.vicinity.utils.LocationTracker;
 import com.chen4393c.vicinity.utils.QueryPreferences;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -35,11 +45,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private static final String TAG = "MapFragment";
 
-    private LocationTracker mLocationTracker;
-
     private View mParentView;
     private MapView mMapView;
     private GoogleMap mMap;
+    FloatingActionButton mReportFAB;
+    private Dialog mDialog;
+    private ViewSwitcher mViewSwitcher;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -58,11 +69,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState);
 
         mMapView = (MapView) mParentView.findViewById(R.id.event_map_view);
+        FloatingActionButton resetFAB = mParentView.findViewById(R.id.fab_reset_focus);
+        mReportFAB = mParentView.findViewById(R.id.fab_report);
+
         if (mMapView != null) {
             mMapView.onCreate(null);
             mMapView.onResume();// needed to get the map to display immediately
             mMapView.getMapAsync(this);
         }
+
+        resetFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mMapView.getMapAsync(MapFragment.this);
+            }
+        });
+
+        mReportFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog(getContext());
+            }
+        });
     }
 
     @Override
@@ -70,7 +98,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onResume();
         Log.d(TAG,"onResume()");
         mMapView.onResume();
-        setTheme();
+        setMapTheme(mMap, getContext());
     }
 
     @Override
@@ -102,13 +130,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         MapsInitializer.initialize(context);
 
         mMap = googleMap;
-        setTheme();
+        setMapTheme(googleMap, context);
 
-        mLocationTracker = new LocationTracker(getActivity());
-        mLocationTracker.getLocation();
+        LocationTracker locationTracker = new LocationTracker(getActivity());
+        locationTracker.getLocation();
 
-        double lat = mLocationTracker.getLatitude();
-        double lon = mLocationTracker.getLongitude();
+        double lat = locationTracker.getLatitude();
+        double lon = locationTracker.getLongitude();
         Log.i(TAG, "lat, lon: " + lat + ", " + lon);
         LatLng point = new LatLng(lat, lon);
 
@@ -125,18 +153,85 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
-    private void setTheme() {
-        if (mMap == null) {
+    private void setMapTheme(GoogleMap googleMap, Context context) {
+        if (googleMap == null) {
             return;
         }
         // Load theme index from shared preferences
         int themeIndex = QueryPreferences.getThemeIndex(getActivity());
-        Context context = getContext();
-        if (context == null) {
-            Log.e(TAG, "getContext() == null");
-            return;
-        }
-        mMap.setMapStyle(MapStyleOptions
+        googleMap.setMapStyle(MapStyleOptions
                 .loadRawResourceStyle(context, Constant.mapThemes[themeIndex]));
+    }
+
+    private void showDialog(Context context) {
+        final View dialogView = View.inflate(getActivity(), R.layout.dialog, null);
+        mViewSwitcher = (ViewSwitcher) dialogView.findViewById(R.id.view_switcher);
+        mDialog = new Dialog(getActivity(), R.style.AppTheme);
+        mDialog.requestWindowFeature(Window.FEATURE_ACTION_BAR);
+
+        Toolbar toolbar = dialogView.findViewById(R.id.toolbar_dialog);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                animateDialog(dialogView, false, mDialog);
+            }
+        });
+
+        mDialog.setContentView(dialogView);
+
+        mDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                animateDialog(dialogView, true, null);
+            }
+        });
+
+        mDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
+                if (i == KeyEvent.KEYCODE_BACK) {
+                    animateDialog(dialogView, false, mDialog);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        mDialog.getWindow().setBackgroundDrawable(
+                new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        mDialog.show();
+    }
+
+    // Add animation to Floating Action Button
+    private void animateDialog(View dialogView, boolean open, final Dialog dialog) {
+        final View view = dialogView.findViewById(R.id.dialog);
+        int w = view.getWidth();
+        int h = view.getHeight();
+
+        float endRadius = (float) Math.hypot(w, h);
+
+        int cx = w - mReportFAB.getWidth() / 2 - Constant.FAB_MARGIN;
+        int cy = h - mReportFAB.getHeight() / 2 - Constant.FAB_MARGIN;
+
+        if (open) {
+            Animator anim = ViewAnimationUtils
+                    .createCircularReveal(view, cx, cy, 0, endRadius);
+            anim.setDuration(500);
+            anim.start();
+        } else {
+            Animator anim = ViewAnimationUtils
+                    .createCircularReveal(view, cx, cy, endRadius, 0);
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    dialog.dismiss();
+                    view.setVisibility(View.INVISIBLE);
+                }
+            });
+            anim.setDuration(500);
+            anim.start();
+        }
     }
 }

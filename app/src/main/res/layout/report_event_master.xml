@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/report_event_master"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/gray">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:fontFamily="cursive"
+        android:textSize="@dimen/report_event_master_title_size"
+        android:textColor="@color/white"
+        android:paddingTop="@dimen/report_event_master_title_padding"
+        android:paddingBottom="@dimen/report_event_master_title_padding"
+        android:text="@string/report_event_master_title"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/report_event_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

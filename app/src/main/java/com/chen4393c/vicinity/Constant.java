@@ -10,4 +10,6 @@ public class Constant {
             R.raw.theme_night,
             R.raw.theme_aubergine
     };
+
+    public static final int FAB_MARGIN = 24;
 }
