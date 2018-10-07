@@ -34,11 +34,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.chen4393c.vicinity.Config;
 import com.chen4393c.vicinity.Constant;
 import com.chen4393c.vicinity.ControlPanelActivity;
 import com.chen4393c.vicinity.R;
 import com.chen4393c.vicinity.main.report.ReportRecyclerViewAdapter;
 import com.chen4393c.vicinity.model.Item;
+import com.chen4393c.vicinity.model.TrafficEvent;
 import com.chen4393c.vicinity.utils.LocationTracker;
 import com.chen4393c.vicinity.utils.QueryPreferences;
 import com.chen4393c.vicinity.utils.UIUtils;
@@ -52,6 +54,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +67,8 @@ import java.util.List;
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private static final String TAG = "MapFragment";
+
+    private LocationTracker mLocationTracker;
 
     private View mParentView;
     private MapView mMapView;
@@ -74,12 +81,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private ViewSwitcher mViewSwitcher;
 
     // event detail
+    private String mCurrentEventType;
     private ImageView mImageCamera;
     private Button mBackButton;
     private Button mSendButton;
     private EditText mCommentEditText;
     private ImageView mEventTypeImage;
     private TextView mTypeTextView;
+
+    private DatabaseReference mDatabaseReference;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -90,6 +100,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mParentView = inflater.inflate(R.layout.fragment_map, container, false);
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
         return mParentView;
     }
 
@@ -161,11 +172,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mMap = googleMap;
         setMapTheme(googleMap, context);
 
-        LocationTracker locationTracker = new LocationTracker(getActivity());
-        locationTracker.getLocation();
+        if (mLocationTracker == null) {
+            mLocationTracker = new LocationTracker(getActivity());
+        }
+        mLocationTracker.getLocation();
 
-        double lat = locationTracker.getLatitude();
-        double lon = locationTracker.getLongitude();
+        double lat = mLocationTracker.getLatitude();
+        double lon = mLocationTracker.getLongitude();
         Log.i(TAG, "lat, lon: " + lat + ", " + lon);
         LatLng point = new LatLng(lat, lon);
 
@@ -296,6 +309,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mAdapter.setOnClickListener(new ReportRecyclerViewAdapter.EventOnClickListener() {
             @Override
             public void setItem(Item item) {
+                mCurrentEventType = item.getDrawableLabel();
                 if (mViewSwitcher != null) {
                     mViewSwitcher.showNext();
                     mTypeTextView.setText(item.getDrawableLabel());
@@ -324,5 +338,52 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 mViewSwitcher.showPrevious();
             }
         });
+
+        mSendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                uploadEvent(Config.username);
+                Activity activity = MapFragment.this.getActivity();
+                if (activity != null) {
+                    UIUtils.hideSoftKeyboard(mCommentEditText, activity); // working
+                }
+                mViewSwitcher.showPrevious();
+            }
+        });
+    }
+
+    // Upload event
+    private String uploadEvent(String userId) {
+        TrafficEvent event = new TrafficEvent();
+        // better use builder pattern
+        event.setEventType(mCurrentEventType);
+        event.setEventDescription(mCommentEditText.getText().toString());
+        event.setEventReporterId(userId);
+        event.setEventTimestamp(System.currentTimeMillis());
+        event.setEventLatitude(mLocationTracker.getLatitude());
+        event.setEventLongitude(mLocationTracker.getLongitude());
+        event.setEventLikeNumber(0);
+        event.setEventCommentNumber(0);
+
+        String key = mDatabaseReference.child("events").push().getKey();
+        event.setId(key);
+        mDatabaseReference.child("events").child(key).setValue(event, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    Toast toast = Toast.makeText(getContext(),
+                            "The event is failed, please check your network status.",
+                            Toast.LENGTH_SHORT);
+                    toast.show();
+                    mDialog.dismiss();
+                } else {
+                    Toast toast = Toast.makeText(getContext(), "The event is reported", Toast.LENGTH_SHORT);
+                    toast.show();
+                    // TODO: update map fragment
+                }
+            }
+        });
+
+        return key;
     }
 }
