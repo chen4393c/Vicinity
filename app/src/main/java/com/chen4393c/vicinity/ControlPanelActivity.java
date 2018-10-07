@@ -1,5 +1,6 @@
 package com.chen4393c.vicinity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ public class ControlPanelActivity extends AppCompatActivity
     private static final String TAG = "ControlPanelActivity";
 
     private LocationTracker mLocationTracker;
+    private FetchAddressTask mFetchAddressTask;
 
     private TabLayout mTabLayout;
     private TextView mAddressTextView;
@@ -103,7 +105,10 @@ public class ControlPanelActivity extends AppCompatActivity
                         mLocationTracker.getLocation();
                         final double latitude = mLocationTracker.getLatitude();
                         final double longitude = mLocationTracker.getLongitude();
-                        new FetchAddressTask(latitude, longitude).execute();
+                        if (mFetchAddressTask == null) {
+                            mFetchAddressTask = new FetchAddressTask(latitude, longitude, getApplicationContext());
+                        }
+                        mFetchAddressTask.execute();
                     } else {
                         setupAddress();
                     }
@@ -229,21 +234,29 @@ public class ControlPanelActivity extends AppCompatActivity
 
         private double mLatitude;
         private double mLongitude;
+        private Context mContext;
 
-        FetchAddressTask(double latitude, double longitude) {
+        FetchAddressTask(double latitude, double longitude, Context context) {
             mLatitude = latitude;
             mLongitude = longitude;
+            mContext = context;
         }
 
         @Override
         protected String doInBackground(Void... voids) {
-            return new AddressFetcher().fetchAddress(mLatitude, mLongitude);
+            return new AddressFetcher().fetchAddress(mContext, mLatitude, mLongitude);
         }
 
         @Override
         protected void onPostExecute(String s) {
             Config.address = s;
             setupAddress();
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            mFetchAddressTask = null;
         }
     }
 
