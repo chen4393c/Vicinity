@@ -106,7 +106,8 @@ public class ControlPanelActivity extends AppCompatActivity
                         final double latitude = mLocationTracker.getLatitude();
                         final double longitude = mLocationTracker.getLongitude();
                         if (mFetchAddressTask == null) {
-                            mFetchAddressTask = new FetchAddressTask(latitude, longitude, getApplicationContext());
+                            mFetchAddressTask = new FetchAddressTask(
+                                    getApplicationContext(), latitude, longitude);
                         }
                         mFetchAddressTask.execute();
                     } else {
@@ -236,10 +237,10 @@ public class ControlPanelActivity extends AppCompatActivity
         private double mLongitude;
         private Context mContext;
 
-        FetchAddressTask(double latitude, double longitude, Context context) {
+        FetchAddressTask(Context context, double latitude, double longitude) {
+            mContext = context;
             mLatitude = latitude;
             mLongitude = longitude;
-            mContext = context;
         }
 
         @Override
