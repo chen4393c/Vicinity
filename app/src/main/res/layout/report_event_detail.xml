@@ -38,7 +38,7 @@
             android:layout_width="@dimen/report_event_detail_event_camera_image_width"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/report_event_detail_event_camera_image_margin"
-            android:src="@drawable/camera"/>
+            android:src="@drawable/ic_photo_camera"/>
 
         <View
             android:layout_width="@dimen/report_event_detail_separator_width"

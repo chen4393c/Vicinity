@@ -273,8 +273,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         float endRadius = (float) Math.hypot(w, h);
 
-        int cx = w - mReportFAB.getWidth() / 2 - Constant.FAB_MARGIN;
-        int cy = h - mReportFAB.getHeight() / 2 - Constant.FAB_MARGIN;
+        final int FAB_MARGIN = (int) getResources().getDimension(R.dimen.fab_margin);
+        int cx = w - mReportFAB.getWidth() / 2 - FAB_MARGIN;
+        int cy = h - mReportFAB.getHeight() / 2 - FAB_MARGIN;
 
         if (open) {
             Animator anim = ViewAnimationUtils

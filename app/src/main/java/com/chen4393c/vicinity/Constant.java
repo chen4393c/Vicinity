@@ -11,8 +11,6 @@ public class Constant {
             R.raw.theme_aubergine
     };
 
-    public static final int FAB_MARGIN = 24;
-
     public static int[] reportEventDrawableIds = {
             R.drawable.policeman,
             R.drawable.traffic,
