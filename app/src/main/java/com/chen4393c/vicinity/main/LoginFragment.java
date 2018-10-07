@@ -60,6 +60,8 @@ public class LoginFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
         mLoginView = view.findViewById(R.id.login_layout);
+        mLoginFormView = view.findViewById(R.id.login_form);
+        mProgressView = view.findViewById(R.id.login_progress);
         mLogoutView = view.findViewById(R.id.logout_layout);
         updateUI();
 
@@ -88,37 +90,42 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Config.username = null;
-
-                int cx = logoutButton.getWidth() / 2;
-                int cy = logoutButton.getHeight() / 2;
-                float radius = logoutButton.getWidth();
-                Animator animator = ViewAnimationUtils
-                        .createCircularReveal(logoutButton, cx, cy, radius, 0);
-                animator.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        updateUI();
-                    }
-                });
-                animator.start();
+                logoutAnimation(logoutButton);
             }
         });
-
-        mLoginFormView = view.findViewById(R.id.login_form);
-        mProgressView = view.findViewById(R.id.login_progress);
-
         return view;
     }
 
     private void updateUI() {
         if (Config.username == null) {
             mLogoutView.setVisibility(View.GONE);
-            mLoginView.setVisibility(View.VISIBLE);
+            mLoginFormView.setVisibility(View.VISIBLE);
         } else {
+            mLoginFormView.setVisibility(View.GONE);
             mLogoutView.setVisibility(View.VISIBLE);
-            mLoginView.setVisibility(View.GONE);
         }
+    }
+
+    private void showProgress(final boolean show) {
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+        mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        mLoginFormView.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        mProgressView.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 
     private void attemptLogin() {
@@ -207,25 +214,19 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    private void showProgress(final boolean show) {
-        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-        mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+    private void logoutAnimation(Button logoutButton) {
+        int cx = logoutButton.getWidth() / 2;
+        int cy = logoutButton.getHeight() / 2;
+        float radius = logoutButton.getWidth();
+        Animator animator = ViewAnimationUtils
+                .createCircularReveal(logoutButton, cx, cy, radius, 0);
+        animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                super.onAnimationEnd(animation);
+                updateUI();
             }
         });
-
-        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-        mProgressView.animate().setDuration(shortAnimTime).alpha(
-                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            }
-        });
+        animator.start();
     }
 }
