@@ -13,7 +13,7 @@ public class SecurityUtils {
             messageDigest.reset();
             messageDigest.update(input.getBytes(Charset.forName("UTF8")));
             byte[] resultByte = messageDigest.digest();
-            result = Hex.bytesToStringLowercase(resultByte);
+            result = Hex.bytesToStringUppercase(resultByte);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

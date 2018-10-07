@@ -1,6 +1,7 @@
 package com.chen4393c.vicinity.main;
 
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
@@ -8,15 +9,17 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -40,7 +43,6 @@ import android.widget.ViewSwitcher;
 
 import com.chen4393c.vicinity.Config;
 import com.chen4393c.vicinity.Constant;
-import com.chen4393c.vicinity.ControlPanelActivity;
 import com.chen4393c.vicinity.R;
 import com.chen4393c.vicinity.main.report.ReportRecyclerViewAdapter;
 import com.chen4393c.vicinity.model.Item;
@@ -58,9 +60,17 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -77,7 +87,17 @@ import static android.app.Activity.RESULT_OK;
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private static final String TAG = "MapFragment";
-    private static final int REQUEST_CAPTURE_IMAGE = 100;
+    private final String path = Environment.getExternalStorageDirectory() + "/temp.png";
+    private static final int REQUEST_CAPTURE_IMAGE = 0;
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    //Set variables ready for uploading images
+    private FirebaseStorage storage;
+    private StorageReference storageRef;
 
     private LocationTracker mLocationTracker;
 
@@ -112,6 +132,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         // Inflate the layout for this fragment
         mParentView = inflater.inflate(R.layout.fragment_map, container, false);
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        //Initialize cloud storage
+        verifyStoragePermissions(getActivity());
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
         return mParentView;
     }
 
@@ -362,24 +386,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (uploadEvent(Config.username)) {
-                    Activity activity = MapFragment.this.getActivity();
-                    if (activity != null) {
-                        UIUtils.hideSoftKeyboard(mCommentEditText, activity); // working
-                    }
-                    mViewSwitcher.showPrevious();
+                String key = uploadEvent(Config.username);
+                if (key != null) {
+                    uploadImage(key);
                 }
+                Activity activity = MapFragment.this.getActivity();
+                if (activity != null) {
+                    UIUtils.hideSoftKeyboard(mCommentEditText, activity); // working
+                }
+                mViewSwitcher.showPrevious();
             }
         });
     }
 
     // Upload event
-    private boolean uploadEvent(String userId) {
+    private String uploadEvent(String userId) {
         if (userId == null) {
             Toast.makeText(getContext(),
                     getResources().getString(R.string.login_hint_toast),
                     Toast.LENGTH_SHORT).show();
-            return false;
+            return null;
         }
 
         String description = mCommentEditText.getText().toString();
@@ -387,7 +413,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             Toast.makeText(getContext(),
                     getResources().getString(R.string.upload_event_empty_content_toast),
                     Toast.LENGTH_SHORT).show();
-            return false;
+            return null;
         }
 
         String key = mDatabaseReference.child("events").push().getKey();
@@ -395,7 +421,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             Toast.makeText(getContext(),
                     getResources().getText(R.string.upload_event_failed_toast),
                     Toast.LENGTH_SHORT).show();
-            return false;
+            return null;
         }
 
         TrafficEvent event = new TrafficEvent();
@@ -428,7 +454,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        return true;
+        return key;
     }
 
     // Store the image into local disk
@@ -447,7 +473,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 if(!destination.exists()) {
                     try {
                         destination.createNewFile();
-                    }catch(IOException ex) {
+                    } catch(IOException ex) {
                         ex.printStackTrace();
                     }
                 }
@@ -460,6 +486,60 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    //Upload image to cloud storage
+    private void uploadImage(final String key) {
+        File file = new File(path);
+        if (!file.exists()) {
+            mDialog.dismiss();
+            return;
+        }
+        Uri uri = Uri.fromFile(file);
+        final StorageReference imgRef = storageRef.child("images/" + uri.getLastPathSegment() + "_" + System.currentTimeMillis());
+
+        UploadTask uploadTask = imgRef.putFile(uri);
+
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+
+                // Continue with the task to get the download URL
+                return storageRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUri = task.getResult();
+                    mDatabaseReference.child("events").child(key).child("imgUri").
+                    setValue(downloadUri.toString());
+                    File file = new File(path);
+                    file.delete();
+                    mDialog.dismiss();
+                } else {
+                    // Handle failures
+                    // ...
+                }
+            }
+        });
+    }
+
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
         }
     }
 }
