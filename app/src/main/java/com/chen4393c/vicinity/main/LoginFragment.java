@@ -139,19 +139,20 @@ public class LoginFragment extends Fragment {
                     } catch (InterruptedException e) {
                         Log.i(TAG, "Sleep error");
                     }
-                    showProgress(false);
-                    updateUI();
                 } else {
                     // failed
                     Toast.makeText(getActivity(),
                             getResources().getText(R.string.sign_in_failed_toast),
                             Toast.LENGTH_SHORT).show();
                 }
+                showProgress(false);
+                updateUI();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 showProgress(false);
+                updateUI();
             }
         });
     }
