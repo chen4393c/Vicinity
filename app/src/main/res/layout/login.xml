@@ -2,12 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:gravity="center_horizontal"
+              android:orientation="vertical"
               android:paddingLeft="@dimen/layout_margin"
               android:paddingRight="@dimen/layout_margin"
               android:paddingTop="@dimen/layout_margin"
-              android:gravity="center_horizontal"
-              android:background="@color/gray"
-              android:orientation="vertical">
+              android:background="@color/gray">
 
     <ProgressBar
         android:id="@+id/login_progress"
@@ -63,17 +63,23 @@
                 android:textColor="@color/white"
                 android:text="@string/password_title"/>
 
-            <!-- password edit area-->
-            <EditText
-                android:id="@+id/editTextPassword"
-                android:fontFamily="Roboto"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:textColor="#FFFFFF"
-                android:layout_gravity="center_horizontal"
-                android:maxLines="1"
-                android:imeOptions="actionDone"/>
+                android:layout_height="wrap_content">
+
+                <!-- password edit area-->
+                <EditText
+                    android:id="@+id/editTextPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:fontFamily="Roboto"
+                    android:textColor="#FFFFFF"
+                    android:layout_gravity="center_horizontal"
+                    android:maxLines="1"
+                    android:imeOptions="actionDone"/>
+
+            </android.support.design.widget.TextInputLayout>
 
             <!-- button to login-->
             <Button
@@ -83,6 +89,7 @@
                 android:layout_marginTop="@dimen/view_margin"
                 android:text="@string/sign_in_button_text"
                 android:textColor="@android:color/white"
+                android:textStyle="bold"
                 android:fontFamily="Roboto"
                 android:background="@drawable/login_button"/>
 
@@ -94,6 +101,7 @@
                 android:layout_marginTop="@dimen/view_margin"
                 android:text="@string/sign_up_button_text"
                 android:textColor="@android:color/white"
+                android:textStyle="bold"
                 android:fontFamily="Roboto"
                 android:background="@drawable/sign_up_button"/>
 

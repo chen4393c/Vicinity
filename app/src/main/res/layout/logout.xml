@@ -13,6 +13,7 @@
         android:layout_margin="@dimen/view_margin"
         android:text="@string/sign_out_button_text"
         android:textColor="@color/white"
+        android:textStyle="bold"
         android:fontFamily="Roboto"
         android:background="@drawable/logout_button"/>
 

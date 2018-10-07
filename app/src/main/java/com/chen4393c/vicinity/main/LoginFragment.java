@@ -48,10 +48,8 @@ public class LoginFragment extends Fragment {
      * @return new instance of login fragment
      * */
     public static LoginFragment newInstance() {
-        LoginFragment loginFragment = new LoginFragment();
-        return loginFragment;
+        return new LoginFragment();
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -99,33 +97,16 @@ public class LoginFragment extends Fragment {
     private void updateUI() {
         if (Config.username == null) {
             mLogoutView.setVisibility(View.GONE);
-            mLoginFormView.setVisibility(View.VISIBLE);
+            mLoginView.setVisibility(View.VISIBLE);
         } else {
-            mLoginFormView.setVisibility(View.GONE);
+            mLoginView.setVisibility(View.GONE);
             mLogoutView.setVisibility(View.VISIBLE);
         }
     }
 
     private void showProgress(final boolean show) {
-        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
         mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            }
-        });
-
         mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-        mProgressView.animate().setDuration(shortAnimTime).alpha(
-                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            }
-        });
     }
 
     private void attemptLogin() {
@@ -153,7 +134,7 @@ public class LoginFragment extends Fragment {
                     // success
                     Config.username = username;
                     try {
-                        // Simulate network access.
+                        // Simulate delay to give more time to the progress bar
                         Thread.sleep(1500);
                     } catch (InterruptedException e) {
                         Log.i(TAG, "Sleep error");
