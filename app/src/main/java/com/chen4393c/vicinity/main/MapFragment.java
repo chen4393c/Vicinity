@@ -7,9 +7,13 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -58,8 +62,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -67,6 +77,7 @@ import java.util.List;
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private static final String TAG = "MapFragment";
+    private static final int REQUEST_CAPTURE_IMAGE = 100;
 
     private LocationTracker mLocationTracker;
 
@@ -329,6 +340,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mEventTypeImage = (ImageView) dialogView.findViewById(R.id.event_image);
         mTypeTextView = (TextView) dialogView.findViewById(R.id.event_type);
 
+        mImageCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(pictureIntent, REQUEST_CAPTURE_IMAGE);
+            }
+        });
+
         mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -410,5 +429,37 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 
         return true;
+    }
+
+    // Store the image into local disk
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CAPTURE_IMAGE &&
+                resultCode == RESULT_OK) {
+            if (data != null && data.getExtras() != null) {
+                Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
+                mImageCamera.setImageBitmap(imageBitmap);
+
+                //Compress the image, this is optional
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                imageBitmap.compress(Bitmap.CompressFormat.PNG, 90, bytes);
+                File destination = new File(Environment.getExternalStorageDirectory(),"temp.png");
+                if(!destination.exists()) {
+                    try {
+                        destination.createNewFile();
+                    }catch(IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                FileOutputStream fo;
+                try {
+                    fo = new FileOutputStream(destination);
+                    fo.write(bytes.toByteArray());
+                    fo.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
