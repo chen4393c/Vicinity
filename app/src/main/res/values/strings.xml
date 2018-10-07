@@ -56,6 +56,16 @@
     <string name="report_event_detail_back_btn_text">Back</string>
     <string name="report_event_detail_send_btn_text">Send</string>
 
+    <string name="login_hint_toast">To report an event, please login first.</string>
+    <string name="upload_event_empty_content_toast">
+        The event comment should not be empty, please enter some text.
+    </string>
+    <string name="upload_event_failed_toast">
+        The event is failed, please check your network status.
+    </string>
+    <string name="upload_success_toast">The event is reported.</string>
+
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

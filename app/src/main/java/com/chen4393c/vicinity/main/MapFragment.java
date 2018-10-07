@@ -342,48 +342,72 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                uploadEvent(Config.username);
-                Activity activity = MapFragment.this.getActivity();
-                if (activity != null) {
-                    UIUtils.hideSoftKeyboard(mCommentEditText, activity); // working
+                if (uploadEvent(Config.username)) {
+                    Activity activity = MapFragment.this.getActivity();
+                    if (activity != null) {
+                        UIUtils.hideSoftKeyboard(mCommentEditText, activity); // working
+                    }
+                    mViewSwitcher.showPrevious();
                 }
-                mViewSwitcher.showPrevious();
             }
         });
     }
 
     // Upload event
-    private String uploadEvent(String userId) {
+    private boolean uploadEvent(String userId) {
+        if (userId == null) {
+            Toast.makeText(getContext(),
+                    getResources().getString(R.string.login_hint_toast),
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        String description = mCommentEditText.getText().toString();
+        if (description.isEmpty()) {
+            Toast.makeText(getContext(),
+                    getResources().getString(R.string.upload_event_empty_content_toast),
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        String key = mDatabaseReference.child("events").push().getKey();
+        if (key == null) {
+            Toast.makeText(getContext(),
+                    getResources().getText(R.string.upload_event_failed_toast),
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         TrafficEvent event = new TrafficEvent();
         // better use builder pattern
         event.setEventType(mCurrentEventType);
-        event.setEventDescription(mCommentEditText.getText().toString());
+        event.setEventDescription(description);
         event.setEventReporterId(userId);
         event.setEventTimestamp(System.currentTimeMillis());
         event.setEventLatitude(mLocationTracker.getLatitude());
         event.setEventLongitude(mLocationTracker.getLongitude());
         event.setEventLikeNumber(0);
         event.setEventCommentNumber(0);
-
-        String key = mDatabaseReference.child("events").push().getKey();
         event.setId(key);
+
         mDatabaseReference.child("events").child(key).setValue(event, new DatabaseReference.CompletionListener() {
             @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+            public void onComplete(DatabaseError databaseError,
+                                   @NonNull DatabaseReference databaseReference) {
                 if (databaseError != null) {
-                    Toast toast = Toast.makeText(getContext(),
-                            "The event is failed, please check your network status.",
-                            Toast.LENGTH_SHORT);
-                    toast.show();
+                    Toast.makeText(getContext(),
+                            getResources().getText(R.string.upload_event_failed_toast),
+                            Toast.LENGTH_SHORT).show();
                     mDialog.dismiss();
                 } else {
-                    Toast toast = Toast.makeText(getContext(), "The event is reported", Toast.LENGTH_SHORT);
-                    toast.show();
+                    Toast.makeText(getContext(),
+                            getResources().getString(R.string.upload_success_toast),
+                            Toast.LENGTH_SHORT).show();
                     // TODO: update map fragment
                 }
             }
         });
 
-        return key;
+        return true;
     }
 }
