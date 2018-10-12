@@ -62,8 +62,6 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -430,8 +428,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         event.setEventDescription(description);
         event.setEventReporterId(userId);
         event.setEventTimestamp(System.currentTimeMillis());
-        event.setEventLatitude(mLocationTracker.getLatitude());
-        event.setEventLongitude(mLocationTracker.getLongitude());
+        event.setEventLatitude(
+                mLocationTracker.getLatitude() + Constant.LOC_SHAKE * (2 * Math.random() - 1));
+        event.setEventLongitude(
+                mLocationTracker.getLongitude() + Constant.LOC_SHAKE * (2 * Math.random() - 1));
         event.setEventLikeNumber(0);
         event.setEventCommentNumber(0);
         event.setId(key);
@@ -531,7 +531,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     public static void verifyStoragePermissions(Activity activity) {
         // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int permission = ActivityCompat.checkSelfPermission(activity,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         if (permission != PackageManager.PERMISSION_GRANTED) {
             // We don't have permission so prompt the user

@@ -22,4 +22,6 @@ public class Constant {
             R.drawable.construction,
             R.drawable.slippery
     };
+
+    public static final double LOC_SHAKE = 0.02;
 }
