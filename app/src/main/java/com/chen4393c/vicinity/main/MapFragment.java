@@ -436,7 +436,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         event.setEventCommentNumber(0);
         event.setId(key);
 
-        mDatabaseReference.child("events").child(key).setValue(event, new DatabaseReference.CompletionListener() {
+        mDatabaseReference
+                .child("events")
+                .child(key)
+                .setValue(event, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError,
                                    @NonNull DatabaseReference databaseReference) {
@@ -469,7 +472,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 //Compress the image, this is optional
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 imageBitmap.compress(Bitmap.CompressFormat.PNG, 90, bytes);
-                File destination = new File(Environment.getExternalStorageDirectory(),"temp.png");
+                File destination = new File(Environment
+                        .getExternalStorageDirectory(),"temp.png");
                 if(!destination.exists()) {
                     try {
                         destination.createNewFile();
@@ -497,7 +501,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             return;
         }
         Uri uri = Uri.fromFile(file);
-        final StorageReference imgRef = storageRef.child("images/" + uri.getLastPathSegment() + "_" + System.currentTimeMillis());
+        final StorageReference imgRef = storageRef
+                .child("images/" + uri.getLastPathSegment() + "_" + System.currentTimeMillis());
 
         UploadTask uploadTask = imgRef.putFile(uri);
 
