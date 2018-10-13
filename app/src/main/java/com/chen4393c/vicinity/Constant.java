@@ -16,12 +16,12 @@ public class Constant {
             R.drawable.traffic,
             R.drawable.no_entry,
             R.drawable.no_parking,
-            R.drawable.camera,
+            R.drawable.security_camera,
             R.drawable.lights,
             R.drawable.speeding,
             R.drawable.construction,
             R.drawable.slippery
     };
 
-    public static final double LOC_SHAKE = 0.02;
+    public static final double LOC_SHAKE = 0.002;
 }

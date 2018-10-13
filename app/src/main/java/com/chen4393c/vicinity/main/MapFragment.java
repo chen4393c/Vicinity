@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -47,7 +48,9 @@ import com.chen4393c.vicinity.R;
 import com.chen4393c.vicinity.main.report.ReportRecyclerViewAdapter;
 import com.chen4393c.vicinity.model.Item;
 import com.chen4393c.vicinity.model.TrafficEvent;
+import com.chen4393c.vicinity.utils.ImageUtils;
 import com.chen4393c.vicinity.utils.LocationTracker;
+import com.chen4393c.vicinity.utils.LocationUtils;
 import com.chen4393c.vicinity.utils.QueryPreferences;
 import com.chen4393c.vicinity.utils.UIUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -59,13 +62,16 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -154,6 +160,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         resetFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // refresh the map
                 mMapView.getMapAsync(MapFragment.this);
             }
         });
@@ -232,6 +239,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 .build();                   // Creates a CameraPosition from the builder
 
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        loadEventsIntoMap();
     }
 
     private void setMapTheme(GoogleMap googleMap, Context context) {
@@ -260,6 +269,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     UIUtils.hideSoftKeyboard(mCommentEditText, activity); // working
                 }
                 animateDialog(dialogView, false, mDialog);
+                // refresh the map
+                mMapView.getMapAsync(MapFragment.this);
             }
         });
 
@@ -277,6 +288,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
                 if (i == KeyEvent.KEYCODE_BACK) {
                     animateDialog(dialogView, false, mDialog);
+                    // refresh the map
+                    mMapView.getMapAsync(MapFragment.this);
                     return true;
                 }
                 return false;
@@ -547,5 +560,49 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     REQUEST_EXTERNAL_STORAGE
             );
         }
+    }
+
+    // Load events into the map
+    private void loadEventsIntoMap() {
+        mDatabaseReference.child("events").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "Prepare to read database.");
+                for (DataSnapshot noteDataSnapshot : dataSnapshot.getChildren()) {
+                    TrafficEvent event = noteDataSnapshot.getValue(TrafficEvent.class);
+                    double eventLatitude = event.getEventLatitude();
+                    double eventLongitude = event.getEventLongitude();
+
+                    double centerLatitude = mLocationTracker.getLatitude();
+                    double centerLongitude = mLocationTracker.getLongitude();
+
+                    double distance = LocationUtils.getDistanceBetweenTwoLocations(
+                            centerLatitude, centerLongitude, eventLatitude, eventLongitude);
+                    Log.d(TAG, "distance: " + distance + " miles");
+                    if (distance < 10) { // within 10 miles
+                        LatLng latLng = new LatLng(eventLatitude, eventLongitude);
+                        MarkerOptions marker = new MarkerOptions().position(latLng);
+
+                        // Changing marker icon
+                        String type = event.getEventType();
+                        Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(),
+                                Config.trafficMap.get(type));
+
+                        Bitmap resizeBitmap = ImageUtils.getResizedBitmap(icon, 130, 130);
+
+                        marker.icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap));
+
+                        // adding marker
+                        Marker mker = mMap.addMarker(marker);
+                        mker.setTag(event);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "Loading events in map failed.");
+            }
+        });
     }
 }
