@@ -1,7 +1,14 @@
 package com.chen4393c.vicinity.utils;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.util.Log;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class ImageUtils {
     /**
@@ -27,5 +34,30 @@ public class ImageUtils {
                 bm, 0, 0, width, height, matrix, false);
         bm.recycle();
         return resizedBitmap;
+    }
+
+    /**
+     * Download an Image from the given URL, then decodes and returns a Bitmap object.
+     * @param imageUrl the url fetching from the remote
+     * @return the bitmap object
+     */
+    public static Bitmap getBitmapFromURL(String imageUrl) {
+        Bitmap bitmap = null;
+
+        if (bitmap == null) {
+            try {
+                URL url = new URL(imageUrl);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                bitmap = BitmapFactory.decodeStream(input);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e("Error: ", e.getMessage().toString());
+            }
+        }
+
+        return bitmap;
     }
 }

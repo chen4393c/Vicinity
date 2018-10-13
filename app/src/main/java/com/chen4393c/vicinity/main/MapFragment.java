@@ -14,6 +14,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -272,33 +273,31 @@ public class MapFragment extends Fragment
         double latitude = mEvent.getEventLatitude();
         double longitude = mEvent.getEventLongitude();
 
-        mDatabaseReference
-                .child("events")
-                .child(mEvent.getId())
-                .child("event_like_number")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Log.d(TAG, "like number: " + dataSnapshot.getValue());
-                        if (dataSnapshot.getValue() == null) {
-                            mEventLikeTextView.setText(String.valueOf(mEvent.getEventLikeNumber()));
-                        } else {
-                            mEventLikeTextView.setText(String.valueOf(dataSnapshot.getValue()));
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Log.d(TAG, "like number failed.");
-                    }
-                });
+        mEventLikeTextView.setText(String.valueOf(mEvent.getEventLikeNumber()));
 
         String description = mEvent.getEventDescription();
         marker.setTitle(description);
         mEventTypeTextView.setText(type);
 
-        mEventTypeImageView.setImageBitmap(BitmapFactory
-                .decodeResource(getContext().getResources(), Config.trafficMap.get(type)));
+        final String url = mEvent.getImgUri();
+        Log.d(TAG, "url: " + url);
+        if (url == null) {
+            mEventTypeImageView.setImageBitmap(BitmapFactory.decodeResource(getContext().getResources(), Config.trafficMap.get(type)));
+        } else {
+            new AsyncTask<Void, Void, Bitmap>() {
+                @Override
+                protected Bitmap doInBackground(Void... voids) {
+                    Bitmap bitmap = ImageUtils.getBitmapFromURL(url);
+                    return bitmap;
+                }
+
+                @Override
+                protected void onPostExecute(Bitmap bitmap) {
+                    super.onPostExecute(bitmap);
+                    mEventTypeImageView.setImageBitmap(bitmap);
+                }
+            }.execute();
+        }
 
         if (user == null) {
             user = "";
@@ -606,29 +605,33 @@ public class MapFragment extends Fragment
 
         UploadTask uploadTask = imgRef.putFile(uri);
 
-        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+        uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                Log.d(TAG, "task.isSuccessful() in then: " + task.isSuccessful());
                 if (!task.isSuccessful()) {
                     throw task.getException();
                 }
 
                 // Continue with the task to get the download URL
-                return storageRef.getDownloadUrl();
+                return imgRef.getDownloadUrl();
             }
         }).addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
+                Log.d(TAG, "task.isSuccessful() in onComplete: " + task.isSuccessful());
                 if (task.isSuccessful()) {
                     Uri downloadUri = task.getResult();
-                    mDatabaseReference.child("events").child(key).child("imgUri").
-                    setValue(downloadUri.toString());
+                    mDatabaseReference
+                            .child("events")
+                            .child(key)
+                            .child("imgUri")
+                            .setValue(downloadUri.toString());
                     File file = new File(path);
                     file.delete();
-                    mDialog.dismiss();
                 } else {
                     // Handle failures
-                    // ...
+                    Log.d(TAG, "Upload to firebase database error");
                 }
             }
         });
@@ -715,7 +718,7 @@ public class MapFragment extends Fragment
                 mDatabaseReference
                         .child("events")
                         .child(mEvent.getId())
-                        .child("event_like_number")
+                        .child("eventLikeNumber")
                         .setValue(number + 1);
                 mEvent.setEventLikeNumber(number + 1);
                 mEventLikeTextView.setText(String.valueOf(number + 1));
