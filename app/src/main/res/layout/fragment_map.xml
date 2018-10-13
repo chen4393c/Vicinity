@@ -1,32 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".main.MapFragment">
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/event_map_view"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_reset_focus"
-        android:layout_width="@dimen/fab_size"
-        android:layout_height="@dimen/fab_size"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_fab_center_focus_strong"/>
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/event_map_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_report"
-        android:layout_width="@dimen/fab_size"
-        android:layout_height="@dimen/fab_size"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_fab_add_circle"/>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_reset_focus"
+            android:layout_width="@dimen/fab_size"
+            android:layout_height="@dimen/fab_size"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/ic_fab_center_focus_strong"/>
 
-</RelativeLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_report"
+            android:layout_width="@dimen/fab_size"
+            android:layout_height="@dimen/fab_size"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/ic_fab_add_circle"/>
+
+    </RelativeLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_sheet_height"
+        android:background="@color/black"
+        tools:visibility="visible"
+        android:visibility="gone"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/event_info_like_and_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/bottom_sheet_like_chat_margin"
+                android:layout_alignParentStart="true"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/event_info_like_img"
+                    android:layout_width="@dimen/event_info_like_img_size"
+                    android:layout_height="@dimen/event_info_like_img_size"
+                    android:src="@drawable/ic_thumb_up"/>
+
+                <TextView
+                    android:id="@+id/event_info_like_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="15dp"
+                    android:text="0"
+                    android:textColor="@color/white"/>
+
+                <ImageView
+                    android:id="@+id/event_info_comment_img"
+                    android:layout_width="@dimen/event_info_comment_img_size"
+                    android:layout_height="@dimen/event_info_comment_img_size"
+                    android:src="@drawable/ic_insert_comment"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_below="@+id/event_info_like_and_comment"
+                android:layout_marginStart="@dimen/event_info_description_margin_start"
+                android:layout_alignParentBottom="true">
+
+                <TextView
+                    android:id="@+id/event_info_type_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/event_info_type_text_size"
+                    android:textColor="@color/white"
+                    tools:text="Police"/>
+
+                <TextView
+                    android:id="@+id/event_info_location_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/event_info_type_text_size"
+                    android:textColor="@color/white"
+                    tools:text="Location"/>
+
+                <TextView
+                    android:id="@+id/event_info_time_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/event_info_time_text_size"
+                    android:textColor="@color/white"
+                    tools:text="1 hour ago"/>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/event_info_type_img"
+                android:layout_width="@dimen/event_info_type_img_size"
+                android:layout_height="@dimen/event_info_type_img_size"
+                android:layout_marginTop="@dimen/event_info_type_margin"
+                android:layout_marginEnd="@dimen/event_info_type_margin"
+                android:layout_alignParentEnd="true"
+                tools:src="@drawable/policeman"/>
+
+        </RelativeLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

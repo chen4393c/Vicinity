@@ -19,9 +19,11 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -52,6 +54,7 @@ import com.chen4393c.vicinity.utils.ImageUtils;
 import com.chen4393c.vicinity.utils.LocationTracker;
 import com.chen4393c.vicinity.utils.LocationUtils;
 import com.chen4393c.vicinity.utils.QueryPreferences;
+import com.chen4393c.vicinity.utils.TimeUtils;
 import com.chen4393c.vicinity.utils.UIUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -88,7 +91,8 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends Fragment
+        implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private static final String TAG = "MapFragment";
     private final String path = Environment.getExternalStorageDirectory() + "/temp.png";
@@ -126,6 +130,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private DatabaseReference mDatabaseReference;
 
+    private BottomSheetBehavior mBottomSheetBehavior;
+    private NestedScrollView mBottomSheet;
+    private ImageView mEventLikeImageView;
+    private ImageView mEventCommentImageView;
+    private ImageView mEventTypeImageView;
+    private TextView mEventLikeTextView;
+    private TextView mEventTypeTextView;
+    private TextView mEventLocationTextView;
+    private TextView mEventTimeTextView;
+    private TrafficEvent mEvent;
+
     public static MapFragment newInstance() {
         return new MapFragment();
     }
@@ -140,6 +155,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         verifyStoragePermissions(getActivity());
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
+        setupBottomBehavior();
         return mParentView;
     }
 
@@ -207,6 +223,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             Log.e(TAG, "getContext() == null");
             return;
         }
+        googleMap.setOnMarkerClickListener(this);
         MapsInitializer.initialize(context);
 
         mMap = googleMap;
@@ -241,6 +258,57 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
         loadEventsIntoMap();
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        mEvent = (TrafficEvent) marker.getTag();
+        if (mEvent == null) {
+            return true;
+        }
+        String user = mEvent.getEventReporterId();
+        String type = mEvent.getEventType();
+        long time = mEvent.getEventTimestamp();
+        double latitude = mEvent.getEventLatitude();
+        double longitude = mEvent.getEventLongitude();
+        int likeNumber = mEvent.getEventLikeNumber();
+
+        String description = mEvent.getEventDescription();
+        marker.setTitle(description);
+        mEventLikeTextView.setText(String.valueOf(likeNumber));
+        mEventTypeTextView.setText(type);
+
+        mEventTypeImageView.setImageBitmap(BitmapFactory
+                .decodeResource(getContext().getResources(), Config.trafficMap.get(type)));
+
+        if (user == null) {
+            user = "";
+        }
+        String info = "Reported by " + user + " " + TimeUtils.timeTransformer(time);
+        mEventTimeTextView.setText(info);
+
+
+        double distance = 0;
+        if (mLocationTracker == null) {
+            mLocationTracker = new LocationTracker(getActivity());
+        }
+        mLocationTracker.getLocation();
+        double centerLatitude = mLocationTracker.getLatitude();
+        double centerLongitude = mLocationTracker.getLongitude();
+
+        if (mLocationTracker != null) {
+            distance = LocationUtils.getDistanceBetweenTwoLocations(latitude, longitude,
+                    centerLatitude, centerLongitude);
+        }
+        mEventLocationTextView.setText(String.format("%.2f miles away", distance));
+
+        if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+            mBottomSheet.setVisibility(View.VISIBLE);
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        } else {
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        }
+        return false;
     }
 
     private void setMapTheme(GoogleMap googleMap, Context context) {
@@ -604,5 +672,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 Log.d(TAG, "Loading events in map failed.");
             }
         });
+    }
+
+    private void setupBottomBehavior() {
+        mBottomSheet = (NestedScrollView) mParentView.findViewById(R.id.bottom_sheet);
+        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+        mBottomSheetBehavior.setHideable(true);
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        mBottomSheetBehavior.setPeekHeight(1000);
+
+        mEventLikeImageView = (ImageView) mParentView.findViewById(R.id.event_info_like_img);
+        mEventCommentImageView = (ImageView) mParentView.findViewById(R.id.event_info_comment_img);
+        mEventTypeImageView = (ImageView) mParentView.findViewById(R.id.event_info_type_img);
+        mEventLikeTextView = (TextView) mParentView.findViewById(R.id.event_info_like_text);
+        mEventTypeTextView = (TextView) mParentView.findViewById(R.id.event_info_type_text);
+        mEventLocationTextView = (TextView) mParentView.findViewById(R.id.event_info_location_text);
+        mEventTimeTextView = (TextView) mParentView.findViewById(R.id.event_info_time_text);
     }
 }

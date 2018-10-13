@@ -31,4 +31,13 @@
     <dimen name="report_event_detail_comment_margin">15dp</dimen>
     <dimen name="report_event_detail_comment_padding">5dp</dimen>
     <dimen name="report_event_detail_horizontal_layout_height">100dp</dimen>
+    <dimen name="bottom_sheet_height">150dp</dimen>
+    <dimen name="bottom_sheet_like_chat_margin">10dp</dimen>
+    <dimen name="event_info_like_img_size">50dp</dimen>
+    <dimen name="event_info_comment_img_size">50dp</dimen>
+    <dimen name="event_info_type_img_size">80dp</dimen>
+    <dimen name="event_info_type_margin">30dp</dimen>
+    <dimen name="event_info_description_margin_start">20dp</dimen>
+    <dimen name="event_info_type_text_size">20sp</dimen>
+    <dimen name="event_info_time_text_size">15sp</dimen>
 </resources>
