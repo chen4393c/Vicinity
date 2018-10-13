@@ -271,11 +271,30 @@ public class MapFragment extends Fragment
         long time = mEvent.getEventTimestamp();
         double latitude = mEvent.getEventLatitude();
         double longitude = mEvent.getEventLongitude();
-        int likeNumber = mEvent.getEventLikeNumber();
+
+        mDatabaseReference
+                .child("events")
+                .child(mEvent.getId())
+                .child("event_like_number")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Log.d(TAG, "like number: " + dataSnapshot.getValue());
+                        if (dataSnapshot.getValue() == null) {
+                            mEventLikeTextView.setText(String.valueOf(mEvent.getEventLikeNumber()));
+                        } else {
+                            mEventLikeTextView.setText(String.valueOf(dataSnapshot.getValue()));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.d(TAG, "like number failed.");
+                    }
+                });
 
         String description = mEvent.getEventDescription();
         marker.setTitle(description);
-        mEventLikeTextView.setText(String.valueOf(likeNumber));
         mEventTypeTextView.setText(type);
 
         mEventTypeImageView.setImageBitmap(BitmapFactory
@@ -688,5 +707,19 @@ public class MapFragment extends Fragment
         mEventTypeTextView = (TextView) mParentView.findViewById(R.id.event_info_type_text);
         mEventLocationTextView = (TextView) mParentView.findViewById(R.id.event_info_location_text);
         mEventTimeTextView = (TextView) mParentView.findViewById(R.id.event_info_time_text);
+
+        mEventLikeImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int number = Integer.parseInt(mEventLikeTextView.getText().toString());
+                mDatabaseReference
+                        .child("events")
+                        .child(mEvent.getId())
+                        .child("event_like_number")
+                        .setValue(number + 1);
+                mEvent.setEventLikeNumber(number + 1);
+                mEventLikeTextView.setText(String.valueOf(number + 1));
+            }
+        });
     }
 }
