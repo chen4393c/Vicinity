@@ -67,7 +67,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         notificationBuilder
                 .setSmallIcon(R.drawable.ic_notification)
-                .setColor(getResources().getColor(R.color.colorPrimary))
                 .setContentTitle("FCM Message")
                 .setContentText(fcmmessage)
                 .setAutoCancel(true)
