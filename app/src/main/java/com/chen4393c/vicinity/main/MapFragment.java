@@ -79,6 +79,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -282,21 +283,13 @@ public class MapFragment extends Fragment
         final String url = mEvent.getImgUri();
         Log.d(TAG, "url: " + url);
         if (url == null) {
-            mEventTypeImageView.setImageBitmap(BitmapFactory.decodeResource(getContext().getResources(), Config.trafficMap.get(type)));
+            mEventTypeImageView.setImageBitmap(BitmapFactory
+                    .decodeResource(getContext().getResources(), Config.trafficMap.get(type)));
         } else {
-            new AsyncTask<Void, Void, Bitmap>() {
-                @Override
-                protected Bitmap doInBackground(Void... voids) {
-                    Bitmap bitmap = ImageUtils.getBitmapFromURL(url);
-                    return bitmap;
-                }
-
-                @Override
-                protected void onPostExecute(Bitmap bitmap) {
-                    super.onPostExecute(bitmap);
-                    mEventTypeImageView.setImageBitmap(bitmap);
-                }
-            }.execute();
+            Picasso.get()
+                    .load(url)
+                    .placeholder(Config.trafficMap.get(type))
+                    .into(mEventTypeImageView);
         }
 
         if (user == null) {
