@@ -268,6 +268,21 @@ public class MapFragment extends Fragment
         if (mEvent == null) {
             return true;
         }
+
+        mEventLikeImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int number = Integer.parseInt(mEventLikeTextView.getText().toString());
+                mDatabaseReference
+                        .child("events")
+                        .child(mEvent.getId())
+                        .child("eventLikeNumber")
+                        .setValue(number + 1);
+                mEvent.setEventLikeNumber(number + 1);
+                mEventLikeTextView.setText(String.valueOf(number + 1));
+            }
+        });
+
         String user = mEvent.getEventReporterId();
         String type = mEvent.getEventType();
         long time = mEvent.getEventTimestamp();
@@ -703,19 +718,5 @@ public class MapFragment extends Fragment
         mEventTypeTextView = (TextView) mParentView.findViewById(R.id.event_info_type_text);
         mEventLocationTextView = (TextView) mParentView.findViewById(R.id.event_info_location_text);
         mEventTimeTextView = (TextView) mParentView.findViewById(R.id.event_info_time_text);
-
-        mEventLikeImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int number = Integer.parseInt(mEventLikeTextView.getText().toString());
-                mDatabaseReference
-                        .child("events")
-                        .child(mEvent.getId())
-                        .child("eventLikeNumber")
-                        .setValue(number + 1);
-                mEvent.setEventLikeNumber(number + 1);
-                mEventLikeTextView.setText(String.valueOf(number + 1));
-            }
-        });
     }
 }
