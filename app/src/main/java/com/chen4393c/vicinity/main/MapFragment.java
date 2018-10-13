@@ -581,7 +581,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     Log.d(TAG, "distance: " + distance + " miles");
                     if (distance < 10) { // within 10 miles
                         LatLng latLng = new LatLng(eventLatitude, eventLongitude);
-                        MarkerOptions marker = new MarkerOptions().position(latLng);
+                        MarkerOptions markerOptions = new MarkerOptions().position(latLng);
 
                         // Changing marker icon
                         String type = event.getEventType();
@@ -590,11 +590,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                         Bitmap resizeBitmap = ImageUtils.getResizedBitmap(icon, 130, 130);
 
-                        marker.icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap));
+                        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap));
 
                         // adding marker
-                        Marker mker = mMap.addMarker(marker);
-                        mker.setTag(event);
+                        Marker marker = mMap.addMarker(markerOptions);
+                        marker.setTag(event);
                     }
                 }
             }
