@@ -299,11 +299,11 @@ public class MapFragment extends Fragment
         Log.d(TAG, "url: " + url);
         if (url == null) {
             mEventTypeImageView.setImageBitmap(BitmapFactory
-                    .decodeResource(getContext().getResources(), Config.trafficMap.get(type)));
+                    .decodeResource(getContext().getResources(), mEvent.getItem().getDrawableId()));
         } else {
             Picasso.get()
                     .load(url)
-                    .placeholder(Config.trafficMap.get(type))
+                    .placeholder(mEvent.getItem().getDrawableId())
                     .into(mEventTypeImageView);
         }
 
@@ -693,7 +693,7 @@ public class MapFragment extends Fragment
                         // Changing marker icon
                         String type = event.getType();
                         Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(),
-                                Config.trafficMap.get(type));
+                                event.getItem().getDrawableId());
 
                         Bitmap resizeBitmap = ImageUtils.getResizedBitmap(icon, 130, 130);
 
