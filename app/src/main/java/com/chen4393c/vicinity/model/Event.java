@@ -13,6 +13,10 @@ public class Event {
     private String mImageUri;
     private Item mItem;
 
+    public Event() {
+        // no-argument constructor for Firebase database fetching
+    }
+
     private Event(EventBuilder builder) {
         mId = builder.mId;
         mType = builder.mType;
@@ -31,44 +35,88 @@ public class Event {
         return mId;
     }
 
+    public void setId(String id) {
+        mId = id;
+    }
+
     public String getType() {
         return mType;
+    }
+
+    public void setType(String type) {
+        mType = type;
     }
 
     public int getCommentNumber() {
         return mCommentNumber;
     }
 
+    public void setCommentNumber(int commentNumber) {
+        mCommentNumber = commentNumber;
+    }
+
     public long getTimestamp() {
         return mTimestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        mTimestamp = timestamp;
     }
 
     public double getLatitude() {
         return mLatitude;
     }
 
+    public void setLatitude(double latitude) {
+        mLatitude = latitude;
+    }
+
     public double getLongitude() {
         return mLongitude;
+    }
+
+    public void setLongitude(double longitude) {
+        mLongitude = longitude;
     }
 
     public String getReporterId() {
         return mReporterId;
     }
 
+    public void setReporterId(String reporterId) {
+        mReporterId = reporterId;
+    }
+
     public int getLikeNumber() {
         return mLikeNumber;
+    }
+
+    public void setLikeNumber(int likeNumber) {
+        mLikeNumber = likeNumber;
     }
 
     public String getDescription() {
         return mDescription;
     }
 
+    public void setDescription(String description) {
+        mDescription = description;
+    }
+
     public String getImageUri() {
         return mImageUri;
     }
 
+    public void setImageUri(String imageUri) {
+        mImageUri = imageUri;
+    }
+
     public Item getItem() {
         return mItem;
+    }
+
+    public void setItem(Item item) {
+        mItem = item;
     }
 
     public static class EventBuilder {

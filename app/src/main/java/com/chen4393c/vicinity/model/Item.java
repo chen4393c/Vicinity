@@ -5,6 +5,10 @@ public class Item {
     private int mDrawableId;
     private String mDrawableLabel;
 
+    public Item() {
+        // no-argument constructor for Firebase database fetching
+    }
+
     public Item(String drawableLabel, int drawableId) {
         this.mDrawableId = drawableId;
         this.mDrawableLabel = drawableLabel;

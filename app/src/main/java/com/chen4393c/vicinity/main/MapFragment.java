@@ -48,8 +48,8 @@ import com.chen4393c.vicinity.Config;
 import com.chen4393c.vicinity.Constant;
 import com.chen4393c.vicinity.R;
 import com.chen4393c.vicinity.main.report.ReportRecyclerViewAdapter;
+import com.chen4393c.vicinity.model.Event;
 import com.chen4393c.vicinity.model.Item;
-import com.chen4393c.vicinity.model.TrafficEvent;
 import com.chen4393c.vicinity.utils.ImageUtils;
 import com.chen4393c.vicinity.utils.LocationTracker;
 import com.chen4393c.vicinity.utils.LocationUtils;
@@ -140,7 +140,8 @@ public class MapFragment extends Fragment
     private TextView mEventTypeTextView;
     private TextView mEventLocationTextView;
     private TextView mEventTimeTextView;
-    private TrafficEvent mEvent;
+    private int mEventDrawableId;
+    private Event mEvent;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -263,7 +264,7 @@ public class MapFragment extends Fragment
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        mEvent = (TrafficEvent) marker.getTag();
+        mEvent = (Event) marker.getTag();
         if (mEvent == null) {
             return true;
         }
@@ -275,26 +276,26 @@ public class MapFragment extends Fragment
                 mDatabaseReference
                         .child("events")
                         .child(mEvent.getId())
-                        .child("eventLikeNumber")
+                        .child("likeNumber")
                         .setValue(number + 1);
-                mEvent.setEventLikeNumber(number + 1);
+                mEvent.setLikeNumber(number + 1);
                 mEventLikeTextView.setText(String.valueOf(number + 1));
             }
         });
 
-        String user = mEvent.getEventReporterId();
-        String type = mEvent.getEventType();
-        long time = mEvent.getEventTimestamp();
-        double latitude = mEvent.getEventLatitude();
-        double longitude = mEvent.getEventLongitude();
+        String user = mEvent.getReporterId();
+        String type = mEvent.getType();
+        long time = mEvent.getTimestamp();
+        double latitude = mEvent.getLatitude();
+        double longitude = mEvent.getLongitude();
 
-        mEventLikeTextView.setText(String.valueOf(mEvent.getEventLikeNumber()));
+        mEventLikeTextView.setText(String.valueOf(mEvent.getLikeNumber()));
 
-        String description = mEvent.getEventDescription();
+        String description = mEvent.getDescription();
         marker.setTitle(description);
         mEventTypeTextView.setText(type);
 
-        final String url = mEvent.getImgUri();
+        final String url = mEvent.getImageUri();
         Log.d(TAG, "url: " + url);
         if (url == null) {
             mEventTypeImageView.setImageBitmap(BitmapFactory
@@ -311,7 +312,6 @@ public class MapFragment extends Fragment
         }
         String info = "Reported by " + user + " " + TimeUtils.timeTransformer(time);
         mEventTimeTextView.setText(info);
-
 
         double distance = 0;
         if (mLocationTracker == null) {
@@ -454,6 +454,7 @@ public class MapFragment extends Fragment
                     mViewSwitcher.showNext();
                     mTypeTextView.setText(item.getDrawableLabel());
                     mEventTypeImage.setImageDrawable(context.getDrawable(item.getDrawableId()));
+                    mEventDrawableId = item.getDrawableId();
                 }
             }
         });
@@ -528,19 +529,25 @@ public class MapFragment extends Fragment
             return null;
         }
 
-        TrafficEvent event = new TrafficEvent();
+        Event.EventBuilder eventBuilder = new Event.EventBuilder();
+
+        Item item = new Item(mTypeTextView.getText().toString(), mEventDrawableId);
+
         // better use builder pattern
-        event.setEventType(mCurrentEventType);
-        event.setEventDescription(description);
-        event.setEventReporterId(userId);
-        event.setEventTimestamp(System.currentTimeMillis());
-        event.setEventLatitude(
-                mLocationTracker.getLatitude() + Constant.LOC_SHAKE * (2 * Math.random() - 1));
-        event.setEventLongitude(
-                mLocationTracker.getLongitude() + Constant.LOC_SHAKE * (2 * Math.random() - 1));
-        event.setEventLikeNumber(0);
-        event.setEventCommentNumber(0);
-        event.setId(key);
+        Event event = eventBuilder
+                .setType(mCurrentEventType)
+                .setDescription(description)
+                .setReporterId(userId)
+                .setTimestamp(System.currentTimeMillis())
+                .setLatitude(mLocationTracker.getLatitude()
+                        + Constant.LOC_SHAKE * (2 * Math.random() - 1))
+                .setLongitude(mLocationTracker.getLongitude()
+                        + Constant.LOC_SHAKE * (2 * Math.random() - 1))
+                .setLikeNumber(0)
+                .setCommentNumber(0)
+                .setId(key)
+                .setItem(item)
+                .build();
 
         mDatabaseReference
                 .child("events")
@@ -553,7 +560,7 @@ public class MapFragment extends Fragment
                     Toast.makeText(getContext(),
                             getResources().getText(R.string.upload_event_failed_toast),
                             Toast.LENGTH_SHORT).show();
-                    mDialog.dismiss();
+//                    mDialog.dismiss();
                 } else {
                     Toast.makeText(getContext(),
                             getResources().getString(R.string.upload_success_toast),
@@ -603,7 +610,7 @@ public class MapFragment extends Fragment
     private void uploadImage(final String key) {
         File file = new File(path);
         if (!file.exists()) {
-            mDialog.dismiss();
+//            mDialog.dismiss();
             return;
         }
         Uri uri = Uri.fromFile(file);
@@ -632,7 +639,7 @@ public class MapFragment extends Fragment
                     mDatabaseReference
                             .child("events")
                             .child(key)
-                            .child("imgUri")
+                            .child("imageUri")
                             .setValue(downloadUri.toString());
                     File file = new File(path);
                     file.delete();
@@ -663,12 +670,15 @@ public class MapFragment extends Fragment
     private void loadEventsIntoMap() {
         mDatabaseReference.child("events").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.d(TAG, "Prepare to read database.");
                 for (DataSnapshot noteDataSnapshot : dataSnapshot.getChildren()) {
-                    TrafficEvent event = noteDataSnapshot.getValue(TrafficEvent.class);
-                    double eventLatitude = event.getEventLatitude();
-                    double eventLongitude = event.getEventLongitude();
+                    Event event = noteDataSnapshot.getValue(Event.class);
+                    if (event == null) {
+                        continue;
+                    }
+                    double eventLatitude = event.getLatitude();
+                    double eventLongitude = event.getLongitude();
 
                     double centerLatitude = mLocationTracker.getLatitude();
                     double centerLongitude = mLocationTracker.getLongitude();
@@ -681,7 +691,7 @@ public class MapFragment extends Fragment
                         MarkerOptions markerOptions = new MarkerOptions().position(latLng);
 
                         // Changing marker icon
-                        String type = event.getEventType();
+                        String type = event.getType();
                         Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(),
                                 Config.trafficMap.get(type));
 
