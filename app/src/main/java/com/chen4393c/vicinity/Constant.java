@@ -3,9 +3,9 @@ package com.chen4393c.vicinity;
 public class Constant {
 
     public static final String EMAIL = "mailto:chen4393c@gmail.com";
-    public static final String GIT_HUB = "https://github.com/chen4393c";
-    public static final String APP_URL = "https://github.com/chen4393c";
-    private static final String DESIGNED_BY = "Designed by Eajy in China";
+    public static final String GIT_HUB = "https://github.com/chen4393c/Vicinity";
+    private static final String APP_URL = "https://github.com/chen4393c/Vicinity";
+    private static final String DESIGNED_BY = "Designed by Chaoran Chen";
     public static final String SHARE_CONTENT = "A beautiful app designed with Material Design:\n" + APP_URL + "\n- " + DESIGNED_BY;
 
     public static int[] mapThemes = {
