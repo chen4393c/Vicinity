@@ -21,8 +21,8 @@
     <dimen name="report_event_master_item_image_margin">30dp</dimen>
     <dimen name="report_event_master_item_text_size">15sp</dimen>
 
-    <dimen name="report_event_detail_event_type_text_size">25sp</dimen>
-    <dimen name="report_event_detail_event_type_margin_top">50dp</dimen>
+    <dimen name="report_event_detail_event_type_text_size">35sp</dimen>
+    <dimen name="report_event_detail_event_type_margin_top">10dp</dimen>
     <dimen name="report_event_detail_event_type_image">130dp</dimen>
     <dimen name="report_event_detail_event_camera_image_width">100dp</dimen>
     <dimen name="report_event_detail_event_camera_image_margin">15dp</dimen>

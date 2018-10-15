@@ -3,7 +3,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:id="@+id/report_event_detail"
                 android:orientation="vertical"
-                android:background="@color/gray"
+                android:background="@color/grey_primary"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -13,6 +13,7 @@
         android:layout_width="wrap_content"
         android:textColor="@color/white"
         android:textSize="@dimen/report_event_detail_event_type_text_size"
+        android:fontFamily="cursive"
         android:layout_marginTop="@dimen/report_event_detail_event_type_margin_top"
         android:layout_centerHorizontal="true"
         tools:text="Event Type"/>

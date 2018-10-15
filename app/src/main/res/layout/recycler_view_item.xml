@@ -4,7 +4,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="@dimen/report_event_master_item_layout_height"
-              android:background="@color/gray"
+              android:background="@color/grey_primary"
               android:padding="@dimen/report_event_master_item_padding">
 
     <ImageView
