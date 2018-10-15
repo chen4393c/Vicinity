@@ -34,7 +34,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
         }
 
-        sendNotification("Send notification to start EventReporter");
+        sendNotification(remoteMessage);
 
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
@@ -51,7 +51,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     /**
      * Create and show a simple notification containing the received FCM message.
      */
-    private void sendNotification(String fcmmessage) {
+    private void sendNotification(RemoteMessage remoteMessage) {
         Intent intent = new Intent(this, ControlPanelActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -61,16 +61,20 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
+        String type = remoteMessage.getData().get("type");
+        String description = remoteMessage.getData().get("description");
+
         //Create Notification according to builder pattern
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this, "EventReporter");
+                new NotificationCompat.Builder(this, "firebase");
 
         notificationBuilder
                 .setSmallIcon(R.drawable.ic_notification)
-                .setContentTitle("FCM Message")
-                .setContentText(fcmmessage)
+                .setContentTitle(type)
+                .setContentText(description)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
+                .setPriority(NotificationManager.IMPORTANCE_HIGH)
                 .setContentIntent(pendingIntent);
 
         // Get Notification Manager

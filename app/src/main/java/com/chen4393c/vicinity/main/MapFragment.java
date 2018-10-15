@@ -297,15 +297,11 @@ public class MapFragment extends Fragment
 
         final String url = mEvent.getImageUri();
         Log.d(TAG, "url: " + url);
-        if (url == null) {
-            mEventTypeImageView.setImageBitmap(BitmapFactory
-                    .decodeResource(getContext().getResources(), mEvent.getItem().getDrawableId()));
-        } else {
-            Picasso.get()
-                    .load(url)
-                    .placeholder(mEvent.getItem().getDrawableId())
-                    .into(mEventTypeImageView);
-        }
+
+        Picasso.get()
+                .load(url)
+                .placeholder(mEvent.getItem().getDrawableId())
+                .into(mEventTypeImageView);
 
         if (user == null) {
             user = "";
@@ -691,13 +687,18 @@ public class MapFragment extends Fragment
                         MarkerOptions markerOptions = new MarkerOptions().position(latLng);
 
                         // Changing marker icon
-                        String type = event.getType();
-                        Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(),
-                                event.getItem().getDrawableId());
+//                        String type = event.getType();
+//                        Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(),
+//                                event.getItem().getDrawableId());
+//
+//                        markerOptions.icon(ImageUtils.bitmapDescriptorFromVector(getContext(),
+//                                event.getItem().getDrawableId()));
+                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
 
-                        Bitmap resizeBitmap = ImageUtils.getResizedBitmap(icon, 130, 130);
+//                        Bitmap resizeBitmap = ImageUtils.getResizedBitmap(icon, 130, 130);
 
-                        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap));
+//                        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap));
+
 
                         // adding marker
                         Marker marker = mMap.addMarker(markerOptions);

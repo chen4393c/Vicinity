@@ -134,7 +134,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/editor/ic_insert_comment_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/image/ic_audiotrack_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -144,9 +144,12 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="2196f3" />
-                            <entry key="outputName" value="ic_insert_comment" />
+                            <entry key="color" value="ff5722" />
+                            <entry key="height" value="128" />
+                            <entry key="outputName" value="event_music_24dp" />
+                            <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="C:\Users\ccr13" />
+                            <entry key="width" value="128" />
                           </map>
                         </option>
                       </PersistentState>

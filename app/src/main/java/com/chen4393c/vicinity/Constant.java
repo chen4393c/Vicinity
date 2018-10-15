@@ -12,15 +12,15 @@ public class Constant {
     };
 
     public static int[] reportEventDrawableIds = {
-            R.drawable.policeman,
-            R.drawable.traffic,
-            R.drawable.no_entry,
-            R.drawable.no_parking,
-            R.drawable.security_camera,
-            R.drawable.lights,
-            R.drawable.speeding,
-            R.drawable.construction,
-            R.drawable.slippery
+            R.drawable.event_work,
+            R.drawable.event_music_24dp,
+            R.drawable.event_weather,
+            R.drawable.event_work,
+            R.drawable.event_music_24dp,
+            R.drawable.event_weather,
+            R.drawable.event_work,
+            R.drawable.event_music_24dp,
+            R.drawable.event_weather
     };
 
     public static final double LOC_SHAKE = 0.002;
