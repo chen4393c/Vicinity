@@ -4,17 +4,17 @@
 
     <header
         android:fragment="com.chen4393c.vicinity.settings.SettingsActivity$GeneralPreferenceFragment"
-        android:icon="@drawable/ic_setings_info"
+        android:icon="@drawable/ic_settings_info"
         android:title="@string/pref_header_general"/>
 
-    <header
-        android:fragment="com.chen4393c.vicinity.settings.SettingsActivity$NotificationPreferenceFragment"
-        android:icon="@drawable/ic_settings_notifications"
-        android:title="@string/pref_header_notifications"/>
+    <!--<header-->
+        <!--android:fragment="com.chen4393c.vicinity.settings.SettingsActivity$NotificationPreferenceFragment"-->
+        <!--android:icon="@drawable/ic_settings_notifications"-->
+        <!--android:title="@string/pref_header_notifications"/>-->
 
-    <header
-        android:fragment="com.chen4393c.vicinity.settings.SettingsActivity$DataSyncPreferenceFragment"
-        android:icon="@drawable/ic_settings_sync"
-        android:title="@string/pref_header_data_sync"/>
+    <!--<header-->
+        <!--android:fragment="com.chen4393c.vicinity.settings.SettingsActivity$DataSyncPreferenceFragment"-->
+        <!--android:icon="@drawable/ic_settings_sync"-->
+        <!--android:title="@string/pref_header_data_sync"/>-->
 
 </preference-headers>

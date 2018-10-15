@@ -24,7 +24,7 @@
         android:layout_below="@+id/event_type"
         android:layout_marginTop="@dimen/report_event_detail_event_type_margin_top"
         android:layout_centerHorizontal="true"
-        tools:src="@drawable/policeman"/>
+        tools:src="@drawable/event_movie"/>
 
     <LinearLayout
         android:id="@+id/event_comment_layout"

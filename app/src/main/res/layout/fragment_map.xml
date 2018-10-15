@@ -121,7 +121,7 @@
                 android:layout_marginTop="@dimen/event_info_type_margin"
                 android:layout_marginEnd="@dimen/event_info_type_margin"
                 android:layout_alignParentEnd="true"
-                tools:src="@drawable/policeman"/>
+                tools:src="@drawable/event_party"/>
 
         </RelativeLayout>
 
