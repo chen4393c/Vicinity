@@ -56,10 +56,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         //Define pending intent to trigger activity
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 , intent,
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         String type = remoteMessage.getData().get("type");
         String description = remoteMessage.getData().get("description");
@@ -74,15 +74,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentText(description)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
-                .setPriority(NotificationManager.IMPORTANCE_HIGH)
+//                .setPriority(NotificationManager.IMPORTANCE_HIGH)
                 .setContentIntent(pendingIntent);
 
         // Get Notification Manager
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        // Send notification
-        notificationManager.notify(0, notificationBuilder.build());
+        if (notificationManager != null) {
+            // Send notification
+            notificationManager.notify(0, notificationBuilder.build());
+        }
     }
 }
 

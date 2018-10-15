@@ -38,18 +38,19 @@
 
     <string name="title_activity_settings">Settings</string>
 
-    <string name="report_event_master_title">Report Event</string>
+    <string name="report_event_master_title">Choose one topic</string>
+    <string name="report_event_toolbar_title">Report Event</string>
 
     <string-array name="report_event_master_item_names">
-        <item>Police</item>
-        <item>Traffic</item>
-        <item>No Entry</item>
-        <item>No Parking</item>
-        <item>Security Camera</item>
-        <item>Headlight</item>
-        <item>Speeding</item>
-        <item>Construction</item>
-        <item>Slippery</item>
+        <item>Work</item>
+        <item>Music</item>
+        <item>Weather</item>
+        <item>Shopping</item>
+        <item>Movie</item>
+        <item>Travel</item>
+        <item>Working out</item>
+        <item>Party</item>
+        <item>Note</item>
     </string-array>
 
     <string name="report_event_detail_comment_hint">Enter your comment here!</string>

@@ -22,15 +22,15 @@ exports.sendNotification = functions.database.ref('/events/{pushId}')
               }
           };
 
-      // Send firebase cloud message to devices subscribed to the provided topic.
-      return admin.messaging().sendToTopic(topic, payload)
-          .then(function (response) {
-              // See the MessagingTopicResponse reference documentation for the
-              // contents of response.
-              console.log("Successfully sent message:", response);
-              return -1;
+          // Send firebase cloud message to devices subscribed to the provided topic.
+          return admin.messaging().sendToTopic(topic, payload)
+              .then(function (response) {
+                  // See the MessagingTopicResponse reference documentation for the
+                  // contents of response.
+                  console.log("Successfully sent message:", response);
+                  return -1;
+              })
+              .catch(function (error) {
+                  console.log("Error sending message:", error);
+              });
           })
-          .catch(function (error) {
-              console.log("Error sending message:", error);
-          });
-      })

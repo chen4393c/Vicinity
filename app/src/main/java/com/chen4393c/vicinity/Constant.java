@@ -13,14 +13,14 @@ public class Constant {
 
     public static int[] reportEventDrawableIds = {
             R.drawable.event_work,
-            R.drawable.event_music_24dp,
+            R.drawable.event_music,
             R.drawable.event_weather,
-            R.drawable.event_work,
-            R.drawable.event_music_24dp,
-            R.drawable.event_weather,
-            R.drawable.event_work,
-            R.drawable.event_music_24dp,
-            R.drawable.event_weather
+            R.drawable.event_shopping,
+            R.drawable.event_movie,
+            R.drawable.event_travel,
+            R.drawable.event_working_out,
+            R.drawable.event_party,
+            R.drawable.event_note
     };
 
     public static final double LOC_SHAKE = 0.002;

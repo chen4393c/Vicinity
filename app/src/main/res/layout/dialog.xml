@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:title="@string/report_event_master_title"
+            app:title="@string/report_event_toolbar_title"
             app:navigationIcon="?homeAsUpIndicator"
             app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
