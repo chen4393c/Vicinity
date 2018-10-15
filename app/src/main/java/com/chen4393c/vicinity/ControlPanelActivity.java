@@ -236,6 +236,11 @@ public class ControlPanelActivity extends AppCompatActivity
         } else if (id == R.id.nav_about) {
             intent.setClass(this, AboutActivity.class);
             startActivity(intent);
+        } else if (id == R.id.nav_share) {
+            intent.setAction(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_TEXT, Constant.SHARE_CONTENT);
+            intent.setType("text/plain");
+            startActivity(Intent.createChooser(intent, getString(R.string.share_with)));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

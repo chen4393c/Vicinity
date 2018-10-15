@@ -46,4 +46,5 @@
     <dimen name="main_card_margin_horizontal">8dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="card_title_margin">16dp</dimen>
+    <dimen name="text_margin_very_small">4dp</dimen>
 </resources>

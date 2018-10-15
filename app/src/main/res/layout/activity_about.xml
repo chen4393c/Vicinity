@@ -34,11 +34,11 @@
         android:textSize="12sp"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_share"
+        android:id="@+id/fab_about_share"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email"/>
+        app:srcCompat="@drawable/ic_share_with_white_24dp"/>
 
 </android.support.design.widget.CoordinatorLayout>
