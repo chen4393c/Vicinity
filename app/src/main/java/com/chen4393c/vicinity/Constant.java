@@ -6,7 +6,8 @@ public class Constant {
     public static final String GIT_HUB = "https://github.com/chen4393c/Vicinity";
     private static final String APP_URL = "https://github.com/chen4393c/Vicinity";
     private static final String DESIGNED_BY = "Designed by Chaoran Chen";
-    public static final String SHARE_CONTENT = "A beautiful app designed with Material Design:\n" + APP_URL + "\n- " + DESIGNED_BY;
+    public static final String SHARE_CONTENT =
+            "An user-generated content Android social media app:\n" + APP_URL + "\n- " + DESIGNED_BY;
 
     public static int[] mapThemes = {
             R.raw.theme_standard,
