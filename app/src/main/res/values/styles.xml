@@ -23,14 +23,10 @@
         <item name="android:statusBarColor">@color/colorPrimary</item>
     </style>
 
-    <style name="Notification" parent="TextAppearance.Compat.Notification">
-        <item name="android:colorBackground">@color/colorPrimary</item>
-    </style>
-
-    <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">@color/green_primary</item>
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:windowBackground">@color/gray</item>
+    <style name="AppTheme.NoActionBar_StatusBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
 </resources>

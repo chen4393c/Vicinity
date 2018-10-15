@@ -40,4 +40,10 @@
     <dimen name="event_info_description_margin_start">20dp</dimen>
     <dimen name="event_info_type_text_size">20sp</dimen>
     <dimen name="event_info_time_text_size">15sp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_margin_small">8dp</dimen>
+    <dimen name="main_card_margin_vertical">8dp</dimen>
+    <dimen name="main_card_margin_horizontal">8dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+    <dimen name="card_title_margin">16dp</dimen>
 </resources>

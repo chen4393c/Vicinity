@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.chen4393c.vicinity.about.AboutActivity;
 import com.chen4393c.vicinity.main.LoginFragment;
 import com.chen4393c.vicinity.main.MapFragment;
 import com.chen4393c.vicinity.settings.SettingsActivity;
@@ -232,8 +233,9 @@ public class ControlPanelActivity extends AppCompatActivity
         if (id == R.id.nav_settings) {
             intent.setClass(this, SettingsActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_share) {
-
+        } else if (id == R.id.nav_about) {
+            intent.setClass(this, AboutActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -8,12 +8,11 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
-
     <uses-feature android:name="android.hardware.location.gps"/>
 
     <application
-        android:allowBackup="true"
         android:name=".fcm.CustomApplication"
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -45,15 +44,12 @@
             android:parentActivityName=".ControlPanelActivity">
         </activity>
 
-        <service
-            android:name=".fcm.MyFirebaseMessagingService">
+        <service android:name=".fcm.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
-
-        <service
-            android:name=".fcm.MyFirebaseInstanceIDService">
+        <service android:name=".fcm.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
@@ -62,10 +58,16 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_notification"/>
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorPrimary"/>
+
+        <activity
+            android:name=".about.AboutActivity"
+            android:label="@string/title_activity_about"
+            android:parentActivityName=".ControlPanelActivity"
+            android:theme="@style/AppTheme.NoActionBar_StatusBar">
+        </activity>
     </application>
 
 </manifest>
