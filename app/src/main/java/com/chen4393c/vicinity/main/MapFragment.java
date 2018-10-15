@@ -680,7 +680,7 @@ public class MapFragment extends Fragment
                     double distance = LocationUtils.getDistanceBetweenTwoLocations(
                             centerLatitude, centerLongitude, eventLatitude, eventLongitude);
                     Log.d(TAG, "distance: " + distance + " miles");
-                    if (distance < 10) { // within 10 miles
+                    if (distance < 50) { // within 10 miles
                         LatLng latLng = new LatLng(eventLatitude, eventLongitude);
                         MarkerOptions markerOptions = new MarkerOptions().position(latLng);
 
