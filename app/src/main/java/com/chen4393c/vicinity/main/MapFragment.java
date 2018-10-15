@@ -11,7 +11,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -50,7 +49,6 @@ import com.chen4393c.vicinity.R;
 import com.chen4393c.vicinity.main.report.ReportRecyclerViewAdapter;
 import com.chen4393c.vicinity.model.Event;
 import com.chen4393c.vicinity.model.Item;
-import com.chen4393c.vicinity.utils.ImageUtils;
 import com.chen4393c.vicinity.utils.LocationTracker;
 import com.chen4393c.vicinity.utils.LocationUtils;
 import com.chen4393c.vicinity.utils.QueryPreferences;
@@ -408,7 +406,7 @@ public class MapFragment extends Fragment
 
         float endRadius = (float) Math.hypot(w, h);
 
-        final int FAB_MARGIN = (int) getResources().getDimension(R.dimen.fab_margin);
+        final int FAB_MARGIN = (int) getResources().getDimension(R.dimen.map_fab_margin);
         int cx = w - mReportFAB.getWidth() / 2 - FAB_MARGIN;
         int cy = h - mReportFAB.getHeight() / 2 - FAB_MARGIN;
 
