@@ -2,13 +2,13 @@
 An user-generated content Android social media app.
 
 Description: 
-# When logged in, users can see their current location address from the navigation drawer.
-# Users can refresh the map and see latest posts nearby and can like the events they are interested in.
-# Users can post their events based on different topics with a photo taken by the camera on their devices.
-# Users can customize the theme of the map and the displayed username on the navigation drawer.
-# Users can share the app with the social media installed on their device.
-# Users can receive notifications if others posts their events nearby.
-# Developers can view the source code from the GitHub and contact the author via email.
+<li>When logged in, users can see their current location address from the navigation drawer.</li>
+<li>Users can refresh the map and see latest posts nearby and can like the events they are interested in.</li>
+<li>Users can post their events based on different topics with a photo taken by the camera on their devices.</li>
+<li>Users can customize the theme of the map and the displayed username on the navigation drawer.</li>
+<li>Users can share the app with the social media installed on their device.</li>
+<li>Users can receive notifications if others posts their events nearby.</li>
+<li>Developers can view the source code from the GitHub and contact the author via email.</li>
 
 1. Integrated Google Map API to display the nearby hot topics posted by others. 
 2. Used Google Firebase to store and manage UGC including images, descriptions, title, and locations.
