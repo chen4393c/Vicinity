@@ -9,7 +9,7 @@ Description:
 <li>Users can share the app with the social media installed on their device.</li>
 <li>Users can receive notifications if others posts their events nearby.</li>
 <li>Developers can view the source code from the GitHub and contact the author via email.</li>
-
+<br/>
 1. Integrated Google Map API to display the nearby hot topics posted by others. 
 2. Used Google Firebase to store and manage UGC including images, descriptions, title, and locations.
 3. Improved the UI/UX flow with the idea of Material Design, which includes Animation, ToolBar, 
