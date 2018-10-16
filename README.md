@@ -3,7 +3,7 @@ An user-generated content Android social media app.
 
 You can install it on <a href="https://play.google.com/store/apps/details?id=com.chen4393c.vicinity">Google Play Store</a>.
 
-Functionailities:
+Features:
 <ul>
 <li>When logged in, users can see their current location address from the navigation drawer.</li>
 <li>Users can refresh the map and see latest posts nearby and can like the events they are interested in.</li>
