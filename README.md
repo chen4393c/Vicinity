@@ -18,6 +18,6 @@ Description:
 <ul>
   <li>Integrated Google Map API to display the nearby hot topics posted by others.</li>
   <li>Used Google Firebase to store and manage UGC including images, descriptions, title, and locations.</li>
-  <li>Improved the UI/UX flow with the idea of Material Design, which includes Animation, ToolBar, NavigationDrawer, TabLayout, ProgressBar, BottomSheet etc.</li>
+  <li>Improved the UI/UX flow with the idea of Material Design, which includes Animation, ToolBar, NavigationDrawer, TabLayout, ProgressBar, BottomSheet, VectorDrawable etc.</li>
   <li>Utilized Android Broadcast Intent to handle inter-communication between different users.</li>
 </ul>
